@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>net.gleamynode.apiviz</groupId>
+  <groupId>org.jboss.apiviz</groupId>
   <artifactId>apiviz</artifactId>
-  <version>1.1.4-SNAPSHOT</version>
+  <version>1.2.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>APIviz</name>
   <description>
-    APIviz is a JavaDoc doclet which extends the Java standard doclet.  It generates comprehensive UML-like class and package diagrams for quick understanding of the overall API structure.
+    APIviz is a JavaDoc doclet which extends the Java standard doclet.
+    It generates comprehensive UML-like class and package diagrams
+    that help the quick understanding of the overall API structure.
   </description>
 
-  <url>http://apiviz.googlecode.com/</url>
+  <url>http://www.jboss.org/apiviz/</url>
   <organization>
-    <name>Trustin Heuiseung Lee</name>
-    <url>http://gleamynode.net/</url>
+    <name>JBoss - a division of Red Hat</name>
+    <url>http://www.jboss.org/</url>
   </organization>
 
   <inceptionYear>2008</inceptionYear>
@@ -27,53 +29,38 @@
   </licenses>
 
   <scm>
-    <connection>scm:svn:http://apiviz.googlecode.com/svn/trunk</connection>
-    <developerConnection>scm:svn:https://apiviz.googlecode.com/svn/trunk</developerConnection>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/apiviz/trunk</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/apiviz/trunk</developerConnection>
   </scm>
 
   <distributionManagement>
     <repository>
-      <id>apiviz.release</id>
-      <name>APIviz Release Distribution Repository</name>
-      <url>https://apiviz.googlecode.com/svn/site/repo/mvn/release</url>
+      <id>repository.jboss.org</id>
+      <name>JBoss.org Release Distribution Repository</name>
+      <url>https://svn.jboss.org/repos/repository.jboss.org/maven2</url>
     </repository>
     <snapshotRepository>
-      <id>apiviz.snapshot</id>
-      <name>APIviz Development Snapshot Repository</name>
-      <url>https://apiviz.googlecode.com/svn/site/repo/mvn/snapshot</url>
+      <id>snapshots.jboss.org</id>
+      <name>JBoss.org Development Snapshot Repository</name>
+      <url>https://snapshots.jboss.org/maven2</url>
     </snapshotRepository>
   </distributionManagement>
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>com.sun.jdk</groupId>
-        <artifactId>jdk-tools</artifactId>
-        <version>1.5</version>
-        <scope>system</scope>
-        <systemPath>${java.home}/../lib/tools.jar</systemPath>
-      </dependency>
-
-      <!-- Testing -->
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.4</version>
-        <scope>test</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 
   <dependencies>
     <dependency>
       <groupId>com.sun.jdk</groupId>
       <artifactId>jdk-tools</artifactId>
+      <version>1.5</version>
+      <scope>system</scope>
+      <systemPath>${java.home}/../lib/tools.jar</systemPath>
     </dependency>
-    
+
     <!-- Testing -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <version>4.4</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -89,26 +76,6 @@
           <debug>true</debug>
           <optimize>true</optimize>
           <showDeprecations>true</showDeprecations>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-pmd-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>run-pmd</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>check</goal>
-              <goal>cpd-check</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <sourceEncoding>UTF-8</sourceEncoding>
-          <targetJdk>1.5</targetJdk>
-          <failOnViolation>false</failOnViolation>
-          <linkXRef>false</linkXRef>
         </configuration>
       </plugin>
       <plugin>
@@ -135,15 +102,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>attach-javadoc</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
         <configuration>
           <aggregate>true</aggregate>
           <breakiterator>true</breakiterator>
@@ -185,6 +143,7 @@
                       <zipfileset dir="${basedir}" prefix="META-INF/">
                         <include name="LICENSE.*" />
                         <include name="NOTICE.*" />
+                        <include name="COPYRIGHT.*" />
                       </zipfileset>
                       <zipfileset src="${project.build.directory}/${project.build.finalName}.orig.jar" filemode="644" dirmode="755">
                         <exclude name="*/*/*/example/**" />
@@ -196,21 +155,13 @@
                       <zipfileset dir="${basedir}" prefix="META-INF/">
                         <include name="LICENSE.*" />
                         <include name="NOTICE.*" />
+                        <include name="COPYRIGHT.*" />
                       </zipfileset>
                       <zipfileset src="${project.build.directory}/${project.build.finalName}-sources.orig.jar" filemode="644" dirmode="755">
                         <exclude name="*/*/*/example/**" />
                       </zipfileset>
                     </zip>
                     <delete file="${project.build.directory}/${project.build.finalName}-sources.orig.jar" />
-                    <move file="${project.build.directory}/${project.build.finalName}-javadoc.jar" tofile="${project.build.directory}/${project.build.finalName}-javadoc.orig.jar" />
-                    <zip destfile="${project.build.directory}/${project.build.finalName}-javadoc.jar">
-                      <zipfileset dir="${basedir}" prefix="META-INF/">
-                        <include name="LICENSE.*" />
-                        <include name="NOTICE.*" />
-                      </zipfileset>
-                      <zipfileset src="${project.build.directory}/${project.build.finalName}-javadoc.orig.jar" filemode="644" dirmode="755" />
-                    </zip>
-                    <delete file="${project.build.directory}/${project.build.finalName}-javadoc.orig.jar" />
                   </then>
                 </if>
               </tasks>
@@ -250,15 +201,31 @@
       <plugin>
         <artifactId>maven-release-plugin</artifactId>
         <configuration>
-          <tagBase>
-            https://apiviz.googlecode.com/svn/tags
-          </tagBase>
+          <tagBase>https://svn.jboss.org/repos/apiviz/tags</tagBase>
+          <!-- We don't want to use the default release profile because it
+               causes the JavaDoc and source jars to be deployed twice. -->
+          <useReleaseProfile>false</useReleaseProfile>
+          <!-- Activate a custom profile called "release" -->
+          <arguments>-Prelease</arguments>
         </configuration>
       </plugin>
     </plugins>
   </build>
-  <reporting>
-    <plugins>
-    </plugins>
-  </reporting>
+  <profiles>
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <inherited>true</inherited>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <configuration>
+              <updateReleaseInfo>true</updateReleaseInfo>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
