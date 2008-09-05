@@ -56,6 +56,8 @@ public class Constant {
     public static final String TAG_HIDDEN = TAG_PREFIX + "hidden";
     /* apiviz.exclude <regex> */
     public static final String TAG_EXCLUDE = TAG_PREFIX + "exclude";
+    /* apiviz.excludeSubtypes */
+    public static final String TAG_EXCLUDE_SUBTYPES = TAG_PREFIX + "excludeSubtypes";
     /* apiviz.inherit */
     public static final String TAG_INHERIT = TAG_PREFIX + "inherit";
 

@@ -55,7 +55,8 @@ public class APIvizRootDoc implements RootDoc {
                msg.indexOf(TAG_STEREOTYPE + ' ') >= 0 ||
                msg.indexOf(TAG_USES + ' ') >= 0 ||
                msg.indexOf(TAG_INHERIT + ' ') >= 0 ||
-               msg.indexOf(TAG_EXCLUDE + ' ') >= 0;
+               msg.indexOf(TAG_EXCLUDE + ' ') >= 0 ||
+               msg.indexOf(TAG_EXCLUDE_SUBTYPES + ' ') >= 0;
     }
 
     public void printWarning(SourcePosition arg0, String arg1) {

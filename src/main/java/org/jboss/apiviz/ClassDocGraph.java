@@ -262,7 +262,7 @@ public class ClassDocGraph {
 
         Map<String, PackageDoc> allPackages = APIviz.getPackages(root);
         for (String pname: allPackages.keySet()) {
-            if (isExcluded(allPackages.get(pname))) {
+            if (isHidden(allPackages.get(pname))) {
                 continue;
             }
             packages.put(pname, allPackages.get(pname));
@@ -270,7 +270,7 @@ public class ClassDocGraph {
             JavaPackage pkg = jdepend.getPackage(pname);
             Collection<JavaPackage> epkgs = pkg.getEfferents();
             for (JavaPackage epkg: epkgs) {
-                if (isExcluded(allPackages.get(epkg.getName()))) {
+                if (isHidden(allPackages.get(epkg.getName()))) {
                     continue;
                 }
                 addPackageDependency(edgesToRender, allPackages.get(pname), allPackages.get(epkg.getName()));
@@ -278,8 +278,12 @@ public class ClassDocGraph {
         }
     }
 
-    private static boolean isExcluded(PackageDoc p) {
-        Tag[] tags = p.tags(TAG_EXCLUDE);
+    private static boolean isHidden(Doc node) {
+        if (node.tags(TAG_HIDDEN).length > 0) {
+            return true;
+        }
+
+        Tag[] tags = node.tags(TAG_EXCLUDE);
         if (tags == null) {
             return false;
         }
@@ -381,7 +385,7 @@ public class ClassDocGraph {
             Map<String, ClassDoc> nodesToRender, Set<Edge> edgesToRender,
             boolean useHidden, boolean useSee, boolean forceInherit) {
 
-        if (useHidden && cls.tags(TAG_HIDDEN).length > 0) {
+        if (useHidden && isHidden(cls)) {
             return;
         }
 
@@ -451,13 +455,13 @@ public class ClassDocGraph {
                     continue;
                 }
 
-                if (!useHidden || source.tags(TAG_HIDDEN).length == 0 && target.tags(TAG_HIDDEN).length == 0) {
+                if (!useHidden || !isHidden(source) && !isHidden(target)) {
                     edgesToRender.add(edge);
                 }
-                if (!useHidden || source.tags(TAG_HIDDEN).length == 0) {
+                if (!useHidden || !isHidden(source)) {
                     nodesToRender.put(source.qualifiedName(), source);
                 }
-                if (!useHidden || target.tags(TAG_HIDDEN).length == 0) {
+                if (!useHidden || !isHidden(target)) {
                     nodesToRender.put(target.qualifiedName(), target);
                 }
             }
@@ -515,13 +519,13 @@ public class ClassDocGraph {
                         continue;
                     }
 
-                    if (!useHidden || source.tags(TAG_HIDDEN).length == 0 && target.tags(TAG_HIDDEN).length == 0) {
+                    if (!useHidden || !isHidden(source) && !isHidden(target)) {
                         edgesToRender.add(edge);
                     }
-                    if (!useHidden || source.tags(TAG_HIDDEN).length == 0) {
+                    if (!useHidden || !isHidden(source)) {
                         nodesToRender.put(source.qualifiedName(), source);
                     }
-                    if (!useHidden || target.tags(TAG_HIDDEN).length == 0) {
+                    if (!useHidden || !isHidden(target)) {
                         nodesToRender.put(target.qualifiedName(), target);
                     }
                 }
