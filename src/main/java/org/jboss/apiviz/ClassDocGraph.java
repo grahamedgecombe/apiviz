@@ -572,7 +572,7 @@ public class ClassDocGraph {
             buf.append(
                     "rankdir=LR;" + NEWLINE +
                     "ranksep=1.0;" + NEWLINE +
-                    "nodesep=0.1;" + NEWLINE);
+                    "nodesep=0.2;" + NEWLINE);
         }
 
         buf.append(
