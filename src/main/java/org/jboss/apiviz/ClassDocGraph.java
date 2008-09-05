@@ -387,6 +387,10 @@ public class ClassDocGraph {
 
         if (forceInherit) {
             for (Tag t: pkg.tags(TAG_EXCLUDE)) {
+                if (t.text() == null || t.text().trim().length() == 0) {
+                    continue;
+                }
+
                 if (Pattern.compile(t.text().trim()).matcher(cls.qualifiedName()).find()) {
                     return;
                 }
@@ -407,6 +411,10 @@ public class ClassDocGraph {
                 boolean excluded = false;
                 if (forceInherit || cls.tags(TAG_INHERIT).length > 0) {
                     for (Tag t: pkg.tags(TAG_EXCLUDE)) {
+                        if (t.text() == null || t.text().trim().length() == 0) {
+                            continue;
+                        }
+
                         Pattern p = Pattern.compile(t.text().trim());
 
                         if (p.matcher(source.qualifiedName()).find()) {
@@ -424,6 +432,10 @@ public class ClassDocGraph {
                 }
 
                 for (Tag t: cls.tags(TAG_EXCLUDE)) {
+                    if (t.text() == null || t.text().trim().length() == 0) {
+                        continue;
+                    }
+
                     Pattern p = Pattern.compile(t.text().trim());
 
                     if (p.matcher(source.qualifiedName()).find()) {
@@ -463,6 +475,10 @@ public class ClassDocGraph {
                     boolean excluded = false;
                     if (forceInherit || cls.tags(TAG_INHERIT).length > 0) {
                         for (Tag t: pkg.tags(TAG_EXCLUDE)) {
+                            if (t.text() == null || t.text().trim().length() == 0) {
+                                continue;
+                            }
+
                             Pattern p = Pattern.compile(t.text().trim());
 
                             if (p.matcher(source.qualifiedName()).find()) {
@@ -480,6 +496,10 @@ public class ClassDocGraph {
                     }
 
                     for (Tag t: cls.tags(TAG_EXCLUDE)) {
+                        if (t.text() == null || t.text().trim().length() == 0) {
+                            continue;
+                        }
+
                         Pattern p = Pattern.compile(t.text().trim());
 
                         if (p.matcher(source.qualifiedName()).find()) {
