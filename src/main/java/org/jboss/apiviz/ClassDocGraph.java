@@ -104,7 +104,7 @@ public class ClassDocGraph {
             addEdge(new Edge(REALIZATION, type, i));
         }
 
-        // Apply custom doclet tags first.
+        // Apply custom doclet tags.
         for (Tag t: type.tags()) {
             if (t.name().equals(TAG_USES)) {
                 addEdge(new Edge(root, DEPENDENCY, type, t.text()));
@@ -470,6 +470,12 @@ public class ClassDocGraph {
             if (reversedDirectEdges != null) {
                 for (Edge edge: reversedDirectEdges) {
                     if (!useSee && edge.getType() == SEE_ALSO) {
+                        continue;
+                    }
+
+                    if (cls.tags(TAG_EXCLUDE_SUBTYPES).length > 0 &&
+                            (edge.getType() == EdgeType.GENERALIZATION ||
+                             edge.getType() == EdgeType.REALIZATION)) {
                         continue;
                     }
 
