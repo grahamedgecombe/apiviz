@@ -262,13 +262,35 @@ public class ClassDocGraph {
 
         Map<String, PackageDoc> allPackages = APIviz.getPackages(root);
         for (String pname: allPackages.keySet()) {
+            if (isExcluded(allPackages.get(pname))) {
+                continue;
+            }
+            packages.put(pname, allPackages.get(pname));
+
             JavaPackage pkg = jdepend.getPackage(pname);
             Collection<JavaPackage> epkgs = pkg.getEfferents();
-            packages.put(pname, allPackages.get(pname));
             for (JavaPackage epkg: epkgs) {
+                if (isExcluded(allPackages.get(epkg.getName()))) {
+                    continue;
+                }
                 addPackageDependency(edgesToRender, allPackages.get(pname), allPackages.get(epkg.getName()));
             }
         }
+    }
+
+    private static boolean isExcluded(PackageDoc p) {
+        Tag[] tags = p.tags(TAG_EXCLUDE);
+        if (tags == null) {
+            return false;
+        }
+
+        for (Tag t: tags) {
+            if (t.text() == null || t.text().trim().length() == 0) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static void addPackageDependency(
