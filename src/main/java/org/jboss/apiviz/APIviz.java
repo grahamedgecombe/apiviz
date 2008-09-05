@@ -154,6 +154,8 @@ public class APIviz {
     }
 
     private static void instrumentDiagram(RootDoc root, File outputDirectory, String filename, String diagram) throws IOException {
+        boolean needsBottomMargin = filename.contains("overview-summary") || filename.contains("package-summary");
+
         File htmlFile = new File(outputDirectory, filename + ".html");
         File pngFile = new File(outputDirectory, filename + ".png");
         File mapFile = new File(outputDirectory, filename + ".map");
@@ -195,7 +197,9 @@ public class APIviz {
                 mapContent + NEWLINE +
                 "<CENTER><IMG SRC=\"" + pngFile.getName() +
                 "\" USEMAP=\"#APIVIZ\" BORDER=\"0\"></CENTER>" +
-                NEWLINE + NEWLINE +
+                NEWLINE +
+                (needsBottomMargin? "<BR>" : "") +
+                NEWLINE +
                 oldContent.substring(matcher.end());
             FileUtil.writeFile(htmlFile, newContent);
         } finally {
