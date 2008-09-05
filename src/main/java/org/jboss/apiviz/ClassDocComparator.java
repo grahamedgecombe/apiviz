@@ -36,9 +36,9 @@ import com.sun.javadoc.ClassDoc;
 class ClassDocComparator implements Comparator<ClassDoc> {
 
     public int compare(ClassDoc a, ClassDoc b) {
-        int precedenceDiff = - (getPrecedence(a) - getPrecedence(b));
+        int precedenceDiff = getPrecedence(a) - getPrecedence(b);
         if (precedenceDiff != 0) {
-            return precedenceDiff;
+            return -precedenceDiff;
         }
 
         return a.name().compareTo(b.name());

@@ -33,9 +33,9 @@ public enum EdgeType {
     GENERALIZATION("enormal", "solid", true),
     REALIZATION("enormal", "dashed", true),
     DEPENDENCY("open", "dashed", true),
-    NAVIGABILITY(null, "solid", false),
     AGGREGATION("open", "solid", "ediamond", false),
     COMPOSITION("open", "solid", "diamond", false),
+    NAVIGABILITY(null, "solid", false),
     SEE_ALSO("none", "solid", false);
 
     private final String arrowHead;

@@ -632,23 +632,6 @@ public class ClassDocGraph {
         // important relationships.
         boolean reverse = edge.getType().isReversed();
 
-        // It should be reversed if only one important
-        // relationship is found, otherwise, class hierarchy
-        // will look cluttered.
-        if (!reverse) {
-            Set<Edge> allEdges = edges.get(edge.getSource());
-            if (allEdges != null) {
-                for (Edge e: allEdges) {
-                    switch (e.getType()) {
-                    case GENERALIZATION:
-                    case REALIZATION:
-                    case DEPENDENCY:
-                        reverse = true;
-                    }
-                }
-            }
-        }
-
         if (reverse) {
             buf.append(getNodeId(edge.getTarget()));
             buf.append(" -> ");
