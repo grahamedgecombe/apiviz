@@ -27,9 +27,13 @@ import static org.jboss.apiviz.Constant.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import jdepend.framework.JDepend;
+import jdepend.framework.PackageFilter;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.DocErrorReporter;
@@ -91,9 +95,31 @@ public class APIviz {
     }
 
     private static void generateOverviewSummary(RootDoc root, ClassDocGraph graph, File outputDirectory) throws IOException {
+        final Set<String> packageNames = getPackages(root).keySet();
+        PackageFilter packageFilter = new PackageFilter() {
+            @Override
+            public boolean accept(String packageName) {
+                return packageNames.contains(packageName);
+            }
+        };
+
+        JDepend jdepend = new JDepend(packageFilter);
+
+        File[] classPath = getClassPath(root.options());
+        for (File e: classPath) {
+            if (e.isDirectory()) {
+                jdepend.addDirectory(e.toString());
+            } else {
+                root.printNotice(
+                        "Excluding from dependency analysis: " + e);
+            }
+        }
+
+        jdepend.analyze();
+
         instrumentDiagram(
                 root, outputDirectory, "overview-summary",
-                graph.getOverviewSummaryDiagram());
+                graph.getOverviewSummaryDiagram(jdepend));
     }
 
     private static void generatePackageSummaries(RootDoc root, ClassDocGraph graph, File outputDirectory) throws IOException {
@@ -115,7 +141,7 @@ public class APIviz {
         }
     }
 
-    private static Map<String, PackageDoc> getPackages(RootDoc root) {
+    static Map<String, PackageDoc> getPackages(RootDoc root) {
         Map<String, PackageDoc> packages = new TreeMap<String, PackageDoc>();
         for (ClassDoc c: root.classes()) {
             PackageDoc p = c.containingPackage();
@@ -186,5 +212,21 @@ public class APIviz {
 
         // Fall back to the current working directory.
         return new File(System.getProperty("user.dir", "."));
+    }
+
+    private static File[] getClassPath(String[][] options) {
+        for (String[] o: options) {
+            if (o[0].equals("-classpath")) {
+                String[] cps = o[1].split(File.pathSeparator);
+                File[] cpf = new File[cps.length];
+                for (int i = 0; i < cpf.length; i ++) {
+                    cpf[i] = new File(cps[i]);
+                }
+                return cpf;
+            }
+        }
+
+        // Fall back to the current working directory.
+        return new File[] { new File(System.getProperty("user.dir", ".")) };
     }
 }

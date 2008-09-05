@@ -150,12 +150,6 @@
               <exclude>com.sun.jdk</exclude>
             </excludes>
           </artifactSet>
-          <relocations>
-            <relocation>
-              <pattern>jdepend</pattern>
-              <shadedPattern>org.jboss.apiviz.shaded.jdepend</shadedPattern>
-            </relocation>
-          </relocations>
           <transformers>
             <transformer implementation="org.apache.maven.plugins.shade.resource.ComponentsXmlResourceTransformer"/>
           </transformers>
