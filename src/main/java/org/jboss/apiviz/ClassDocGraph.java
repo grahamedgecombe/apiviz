@@ -25,9 +25,12 @@ package org.jboss.apiviz;
 import static org.jboss.apiviz.Constant.*;
 import static org.jboss.apiviz.EdgeType.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -551,7 +554,11 @@ public class ClassDocGraph {
     private void renderSubgraph(PackageDoc pkg, ClassDoc cls,
             StringBuilder buf, Map<String, ClassDoc> nodesToRender,
             Set<Edge> edgesToRender) {
-        for (ClassDoc node: nodesToRender.values()) {
+
+        List<ClassDoc> nodesToRenderCopy = new ArrayList<ClassDoc>(nodesToRender.values());
+        Collections.sort(nodesToRenderCopy, new ClassDocComparator());
+
+        for (ClassDoc node: nodesToRenderCopy) {
             renderClass(pkg, cls, buf, node);
         }
 
@@ -677,28 +684,14 @@ public class ClassDocGraph {
 
     private static String getStereotype(ClassDoc node) {
         String stereotype = node.isInterface()? "interface" : null;
-        if (node.isException()) {
+        if (node.isException() || node.isError()) {
             stereotype = "exception";
         } else if (node.isAnnotationType()) {
             stereotype = "annotation";
         } else if (node.isEnum()) {
             stereotype = "enum";
-        } else {
-            boolean staticType = true;
-            int methods = 0;
-            for (MethodDoc m: node.methods()) {
-                if (m.isConstructor()) {
-                    continue;
-                }
-                methods ++;
-                if (!m.isStatic()) {
-                    staticType = false;
-                    break;
-                }
-            }
-            if (staticType && methods > 0) {
-                stereotype = "static";
-            }
+        } else if (isStaticType(node)) {
+            stereotype = "static";
         }
 
         if (node.tags(TAG_STEREOTYPE).length > 0) {
@@ -706,6 +699,23 @@ public class ClassDocGraph {
         }
 
         return escape(stereotype);
+    }
+
+    static boolean isStaticType(ClassDoc node) {
+        boolean staticType = true;
+        int methods = 0;
+        for (MethodDoc m: node.methods()) {
+            if (m.isConstructor()) {
+                continue;
+            }
+            methods ++;
+            if (!m.isStatic()) {
+                staticType = false;
+                break;
+            }
+        }
+
+        return staticType && methods > 0;
     }
 
     private static String getFillColor(PackageDoc pkg) {
