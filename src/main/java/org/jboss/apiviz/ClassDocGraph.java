@@ -488,11 +488,49 @@ public class ClassDocGraph {
         PackageDoc pkg = cls.containingPackage();
 
         StringBuilder buf = new StringBuilder(16384);
+        Map<String, ClassDoc> nodesToRender = new TreeMap<String, ClassDoc>();
+        Set<Edge> edgesToRender = new TreeSet<Edge>();
+
+        fetchSubgraph(pkg, cls, nodesToRender, edgesToRender, false, true, false);
+
+        buf.append("digraph APIVIZ {" + NEWLINE);
+
+        // Determine the graph orientation automatically.
+        int nodesAbove = 0;
+        int nodesBelow = 0;
+        for (Edge e: edgesToRender) {
+            if (e.getType().isReversed()) {
+                if (e.getSource() == cls) {
+                    nodesAbove ++;
+                } else {
+                    nodesBelow ++;
+                }
+            } else {
+                if (e.getSource() == cls) {
+                    nodesBelow ++;
+                } else {
+                    nodesAbove ++;
+                }
+            }
+        }
+
+        if (Math.max(nodesAbove, nodesBelow) <= 5) {
+            // Landscape looks better usually up to 5.
+            // There are just a few subtypes and supertypes.
+            buf.append(
+                    "rankdir=TB;" + NEWLINE +
+                    "ranksep=0.4;" + NEWLINE +
+                    "nodesep=0.3;" + NEWLINE);
+        } else {
+            // Portrait looks better.
+            // There are too many subtypes or supertypes.
+            buf.append(
+                    "rankdir=LR;" + NEWLINE +
+                    "ranksep=1.0;" + NEWLINE +
+                    "nodesep=0.1;" + NEWLINE);
+        }
+
         buf.append(
-                "digraph APIVIZ {" + NEWLINE +
-                "rankdir=TB;" + NEWLINE +
-                "ranksep=0.3;" + NEWLINE +
-                "nodesep=0.3;" + NEWLINE +
                 "mclimit=128;" + NEWLINE +
                 "outputorder=edgesfirst;" + NEWLINE +
                 "center=1;" + NEWLINE +
@@ -503,10 +541,6 @@ public class ClassDocGraph {
                 "node [shape=box, fontsize=10, fontname=\"" + NORMAL_FONT + "\", " +
                 "width=0.1, height=0.1, style=\"setlinewidth(0.6)\"]; " + NEWLINE);
 
-        Map<String, ClassDoc> nodesToRender = new TreeMap<String, ClassDoc>();
-        Set<Edge> edgesToRender = new TreeSet<Edge>();
-
-        fetchSubgraph(pkg, cls, nodesToRender, edgesToRender, false, true, false);
         renderSubgraph(pkg, cls, buf, nodesToRender, edgesToRender);
 
         buf.append("}" + NEWLINE);
@@ -589,13 +623,7 @@ public class ClassDocGraph {
 
         // Graphviz lays out nodes upside down - adjust for
         // important relationships.
-        boolean reverse = false;
-        switch (edge.getType()) {
-        case GENERALIZATION:
-        case REALIZATION:
-        case DEPENDENCY:
-            reverse = true;
-        }
+        boolean reverse = edge.getType().isReversed();
 
         // It should be reversed if only one important
         // relationship is found, otherwise, class hierarchy

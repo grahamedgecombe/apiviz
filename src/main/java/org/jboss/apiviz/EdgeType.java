@@ -30,26 +30,28 @@ package org.jboss.apiviz;
  *
  */
 public enum EdgeType {
-    GENERALIZATION("enormal", "solid"),
-    REALIZATION("enormal", "dashed"),
-    DEPENDENCY("open", "dashed"),
-    NAVIGABILITY(null, "solid"),
-    AGGREGATION("open", "solid", "ediamond"),
-    COMPOSITION("open", "solid", "diamond"),
-    SEE_ALSO("none", "solid");
+    GENERALIZATION("enormal", "solid", true),
+    REALIZATION("enormal", "dashed", true),
+    DEPENDENCY("open", "dashed", true),
+    NAVIGABILITY(null, "solid", false),
+    AGGREGATION("open", "solid", "ediamond", false),
+    COMPOSITION("open", "solid", "diamond", false),
+    SEE_ALSO("none", "solid", false);
 
     private final String arrowHead;
     private final String style;
     private final String arrowTail;
+    private final boolean reversed;
 
-    private EdgeType(String arrowHead, String style) {
-        this(arrowHead, style, "none");
+    private EdgeType(String arrowHead, String style, boolean reversed) {
+        this(arrowHead, style, "none", reversed);
     }
 
-    private EdgeType(String arrowHead, String style, String arrowTail) {
+    private EdgeType(String arrowHead, String style, String arrowTail, boolean reversed) {
         this.arrowHead = arrowHead;
         this.style = style;
         this.arrowTail = arrowTail;
+        this.reversed = reversed;
     }
 
     public String getArrowHead() {
@@ -62,5 +64,9 @@ public enum EdgeType {
 
     public String getArrowTail() {
         return arrowTail;
+    }
+
+    public boolean isReversed() {
+        return reversed;
     }
 }
