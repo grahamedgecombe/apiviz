@@ -369,7 +369,7 @@ public class ClassDocGraph {
             fetchSubgraph(pkg, node, nodesToRender, edgesToRender, true, false, true);
         }
 
-        renderSubgraph(pkg, null, buf, nodesToRender, edgesToRender);
+        renderSubgraph(pkg, null, buf, nodesToRender, edgesToRender, true);
 
         buf.append("}" + NEWLINE);
 
@@ -559,6 +559,7 @@ public class ClassDocGraph {
             }
         }
 
+        boolean portrait;
         if (Math.max(nodesAbove, nodesBelow) <= 5) {
             // Landscape looks better usually up to 5.
             // There are just a few subtypes and supertypes.
@@ -566,6 +567,7 @@ public class ClassDocGraph {
                     "rankdir=TB;" + NEWLINE +
                     "ranksep=0.4;" + NEWLINE +
                     "nodesep=0.3;" + NEWLINE);
+            portrait = false;
         } else {
             // Portrait looks better.
             // There are too many subtypes or supertypes.
@@ -573,6 +575,7 @@ public class ClassDocGraph {
                     "rankdir=LR;" + NEWLINE +
                     "ranksep=1.0;" + NEWLINE +
                     "nodesep=0.2;" + NEWLINE);
+            portrait = true;
         }
 
         buf.append(
@@ -586,7 +589,7 @@ public class ClassDocGraph {
                 "node [shape=box, fontsize=10, fontname=\"" + NORMAL_FONT + "\", " +
                 "width=0.1, height=0.1, style=\"setlinewidth(0.6)\"]; " + NEWLINE);
 
-        renderSubgraph(pkg, cls, buf, nodesToRender, edgesToRender);
+        renderSubgraph(pkg, cls, buf, nodesToRender, edgesToRender, portrait);
 
         buf.append("}" + NEWLINE);
 
@@ -595,10 +598,10 @@ public class ClassDocGraph {
 
     private void renderSubgraph(PackageDoc pkg, ClassDoc cls,
             StringBuilder buf, Map<String, ClassDoc> nodesToRender,
-            Set<Edge> edgesToRender) {
+            Set<Edge> edgesToRender, boolean portrait) {
 
         List<ClassDoc> nodesToRenderCopy = new ArrayList<ClassDoc>(nodesToRender.values());
-        Collections.sort(nodesToRenderCopy, new ClassDocComparator());
+        Collections.sort(nodesToRenderCopy, new ClassDocComparator(portrait));
 
         for (ClassDoc node: nodesToRenderCopy) {
             renderClass(pkg, cls, buf, node);

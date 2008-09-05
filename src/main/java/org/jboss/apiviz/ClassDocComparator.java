@@ -35,10 +35,20 @@ import com.sun.javadoc.ClassDoc;
  */
 class ClassDocComparator implements Comparator<ClassDoc> {
 
+    private final boolean portrait;
+
+    ClassDocComparator(boolean portrait) {
+        this.portrait = portrait;
+    }
+
     public int compare(ClassDoc a, ClassDoc b) {
         int precedenceDiff = getPrecedence(a) - getPrecedence(b);
         if (precedenceDiff != 0) {
-            return -precedenceDiff;
+            if (portrait) {
+                return -precedenceDiff;
+            } else {
+                return precedenceDiff;
+            }
         }
 
         return a.name().compareTo(b.name());
