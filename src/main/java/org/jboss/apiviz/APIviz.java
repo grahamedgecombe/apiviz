@@ -26,12 +26,15 @@ import static org.jboss.apiviz.Constant.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import jdepend.framework.JDepend;
+import jdepend.framework.JavaClass;
+import jdepend.framework.JavaPackage;
 import jdepend.framework.PackageFilter;
 
 import com.sun.javadoc.ClassDoc;
@@ -127,16 +130,55 @@ public class APIviz {
 
         jdepend.analyze();
 
+        if (checkClasspathOption(root, jdepend)) {
+            instrumentDiagram(
+                    root, outputDirectory, "overview-summary",
+                    graph.getOverviewSummaryDiagram(jdepend));
+        } else {
+            root.printWarning("Package dependency diagram will not be generated.");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static boolean checkClasspathOption(RootDoc root, JDepend jdepend) {
+        // Sanity check
+        boolean correctClasspath = true;
         if (jdepend.countClasses() == 0) {
             root.printWarning(
                     "JDepend was not able to locate any compiled class files.");
             root.printWarning(
                     "Please make sure the '-classpath' option was specified correctly.");
-        }
+            correctClasspath = false;
+        } else {
+            for (ClassDoc c: root.classes()) {
+                if (c.containingPackage() == null ||
+                    c.containingPackage().name() == null ||
+                    ClassDocGraph.isHidden(c.containingPackage())) {
+                    continue;
+                }
 
-        instrumentDiagram(
-                root, outputDirectory, "overview-summary",
-                graph.getOverviewSummaryDiagram(jdepend));
+                String fqcn = c.containingPackage().name() + '.' + c.name();
+                JavaPackage jpkg = jdepend.getPackage(c.containingPackage().name());
+                Collection<JavaClass> jclasses = jpkg.getClasses();
+                boolean found = false;
+                for (JavaClass jcls: jclasses) {
+                    if (fqcn.equals(jcls.getName())) {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    root.printWarning(
+                            "JDepend was not able to locate some compiled class files: " + fqcn);
+                    root.printWarning(
+                            "Please make sure the '-classpath' option was specified correctly.");
+                    correctClasspath = false;
+                    break;
+                }
+            }
+        }
+        return correctClasspath;
     }
 
     private static void generatePackageSummaries(RootDoc root, ClassDocGraph graph, File outputDirectory) throws IOException {
