@@ -28,6 +28,7 @@ import static org.jboss.apiviz.EdgeType.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -157,8 +158,14 @@ public class ClassDocGraph {
     }
 
     public String getOverviewSummaryDiagram(JDepend jdepend) {
-        Map<String, PackageDoc> packages = new TreeMap<String, PackageDoc>();
+        Map<String, PackageDoc> packages = new TreeMap<String, PackageDoc>(new Comparator<String>() {
+            public int compare(String o1, String o2) {
+                return o2.compareTo(o1);
+            }
+        });
+
         Set<Edge> edgesToRender = new TreeSet<Edge>();
+
         addPackageDependencies(jdepend, packages, edgesToRender);
 
         // Replace direct dependencies with transitive dependencies
@@ -378,6 +385,7 @@ public class ClassDocGraph {
                 "width=0.1, height=0.1, style=\"setlinewidth(0.6)\"]; " + NEWLINE);
 
         Map<String, ClassDoc> nodesToRender = new TreeMap<String, ClassDoc>();
+
         Set<Edge> edgesToRender = new TreeSet<Edge>();
 
         for (ClassDoc node: nodes.values()) {

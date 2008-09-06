@@ -51,7 +51,11 @@ class ClassDocComparator implements Comparator<ClassDoc> {
             }
         }
 
-        return a.name().compareTo(b.name());
+        if (portrait) {
+            return a.name().compareTo(b.name());
+        } else {
+            return b.name().compareTo(a.name());
+        }
     }
 
     private static int getPrecedence(ClassDoc c) {
