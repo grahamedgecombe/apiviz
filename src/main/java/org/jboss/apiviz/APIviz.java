@@ -289,10 +289,6 @@ public class APIviz {
             }
         }
 
-        if (cp.isEmpty()) {
-            cp.add(new File(System.getProperty("user.dir", ".")));
-        }
-
         return cp.toArray(new File[cp.size()]);
     }
 }
