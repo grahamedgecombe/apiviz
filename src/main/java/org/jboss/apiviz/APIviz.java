@@ -26,7 +26,9 @@ import static org.jboss.apiviz.Constant.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
@@ -135,7 +137,10 @@ public class APIviz {
                     root, outputDirectory, "overview-summary",
                     graph.getOverviewSummaryDiagram(jdepend));
         } else {
-            root.printWarning("Package dependency diagram will not be generated.");
+            root.printWarning(
+                    "Please make sure that the '-classpath' option was specified correctly.");
+            root.printWarning(
+                    "Package dependency diagram will not be generated to avoid the inaccurate result.");
         }
     }
 
@@ -146,8 +151,6 @@ public class APIviz {
         if (jdepend.countClasses() == 0) {
             root.printWarning(
                     "JDepend was not able to locate any compiled class files.");
-            root.printWarning(
-                    "Please make sure the '-classpath' option was specified correctly.");
             correctClasspath = false;
         } else {
             for (ClassDoc c: root.classes()) {
@@ -171,8 +174,6 @@ public class APIviz {
                 if (!found) {
                     root.printWarning(
                             "JDepend was not able to locate some compiled class files: " + fqcn);
-                    root.printWarning(
-                            "Please make sure the '-classpath' option was specified correctly.");
                     correctClasspath = false;
                     break;
                 }
@@ -278,18 +279,20 @@ public class APIviz {
     }
 
     private static File[] getClassPath(String[][] options) {
+        List<File> cp = new ArrayList<File>();
         for (String[] o: options) {
             if (o[0].equals("-classpath")) {
                 String[] cps = o[1].split(File.pathSeparator);
-                File[] cpf = new File[cps.length];
-                for (int i = 0; i < cpf.length; i ++) {
-                    cpf[i] = new File(cps[i]);
+                for (String p : cps) {
+                    cp.add(new File(p));
                 }
-                return cpf;
             }
         }
 
-        // Fall back to the current working directory.
-        return new File[] { new File(System.getProperty("user.dir", ".")) };
+        if (cp.isEmpty()) {
+            cp.add(new File(System.getProperty("user.dir", ".")));
+        }
+
+        return cp.toArray(new File[cp.size()]);
     }
 }
