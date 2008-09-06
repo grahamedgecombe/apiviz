@@ -206,24 +206,26 @@ public class ClassDocGraph {
             throw new IllegalStateException("Unexpected empty package name");
         }
 
-        int prefixLen;
-        String firstPackageName = packages.keySet().iterator().next();
-        for (prefixLen = minPackageNameLen; prefixLen > 0; prefixLen --) {
-            if (firstPackageName.charAt(prefixLen - 1) != '.') {
-                continue;
-            }
+        int prefixLen = 0;
+        if (!packages.keySet().isEmpty()) {
+            String firstPackageName = packages.keySet().iterator().next();
+            for (prefixLen = minPackageNameLen; prefixLen > 0; prefixLen --) {
+                if (firstPackageName.charAt(prefixLen - 1) != '.') {
+                    continue;
+                }
 
-            String candidatePrefix = firstPackageName.substring(0, prefixLen);
-            boolean found = true;
-            for (String pname: packages.keySet()) {
-                if (!pname.startsWith(candidatePrefix)) {
-                    found = false;
+                String candidatePrefix = firstPackageName.substring(0, prefixLen);
+                boolean found = true;
+                for (String pname: packages.keySet()) {
+                    if (!pname.startsWith(candidatePrefix)) {
+                        found = false;
+                        break;
+                    }
+                }
+
+                if (found) {
                     break;
                 }
-            }
-
-            if (found) {
-                break;
             }
         }
 
@@ -265,10 +267,19 @@ public class ClassDocGraph {
             if (isHidden(allPackages.get(pname))) {
                 continue;
             }
-            packages.put(pname, allPackages.get(pname));
 
             JavaPackage pkg = jdepend.getPackage(pname);
+            if (pkg == null) {
+                continue;
+            }
+
+            packages.put(pname, allPackages.get(pname));
+
             Collection<JavaPackage> epkgs = pkg.getEfferents();
+            if (epkgs == null) {
+                continue;
+            }
+
             for (JavaPackage epkg: epkgs) {
                 if (isHidden(allPackages.get(epkg.getName()))) {
                     continue;
@@ -278,7 +289,7 @@ public class ClassDocGraph {
         }
     }
 
-    private static boolean isHidden(Doc node) {
+    static boolean isHidden(Doc node) {
         if (node.tags(TAG_HIDDEN).length > 0) {
             return true;
         }

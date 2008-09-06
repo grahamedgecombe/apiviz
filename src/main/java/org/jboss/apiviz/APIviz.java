@@ -27,7 +27,6 @@ import static org.jboss.apiviz.Constant.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -95,11 +94,20 @@ public class APIviz {
     }
 
     private static void generateOverviewSummary(RootDoc root, ClassDocGraph graph, File outputDirectory) throws IOException {
-        final Set<String> packageNames = getPackages(root).keySet();
+        final Map<String, PackageDoc> packages = getPackages(root);
         PackageFilter packageFilter = new PackageFilter() {
             @Override
             public boolean accept(String packageName) {
-                return packageNames.contains(packageName);
+                PackageDoc p = packages.get(packageName);
+                if (p == null) {
+                    return false;
+                }
+
+                if (ClassDocGraph.isHidden(p)) {
+                    return false;
+                }
+
+                return true;
             }
         };
 
@@ -108,14 +116,23 @@ public class APIviz {
         File[] classPath = getClassPath(root.options());
         for (File e: classPath) {
             if (e.isDirectory()) {
+                root.printNotice(
+                        "Included into dependency analysis: " + e);
                 jdepend.addDirectory(e.toString());
             } else {
                 root.printNotice(
-                        "Excluding from dependency analysis: " + e);
+                        "Excluded from dependency analysis: " + e);
             }
         }
 
         jdepend.analyze();
+
+        if (jdepend.countClasses() == 0) {
+            root.printWarning(
+                    "JDepend was not able to locate any compiled class files.");
+            root.printWarning(
+                    "Please make sure the '-classpath' option was specified correctly.");
+        }
 
         instrumentDiagram(
                 root, outputDirectory, "overview-summary",
