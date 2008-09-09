@@ -87,11 +87,55 @@ public class APIviz {
     }
 
     public static boolean validOptions(String[][] options, DocErrorReporter errorReporter) {
-        return Standard.validOptions(options, errorReporter);
+        for (String[] o: options) {
+            if (OPTION_SOURCE_CLASS_PATH.equals(o[0])) {
+                File[] cp = getClassPath(options);
+                if (cp.length == 0) {
+                    errorReporter.printError(
+                            OPTION_SOURCE_CLASS_PATH +
+                            " requires at least one valid class path.");
+                    return false;
+                }
+                for (File f: cp) {
+                    if (!f.exists() || !f.canRead()) {
+                        errorReporter.printError(
+                                f.toString() +
+                                " doesn't exist or is not readable.");
+                        return false;
+                    }
+                }
+            }
+        }
+
+        List<String[]> newOptions = new ArrayList<String[]>();
+        for (String[] o: options) {
+            if (OPTION_SOURCE_CLASS_PATH.equals(o[0])) {
+                continue;
+            }
+
+            newOptions.add(o);
+        }
+
+        return Standard.validOptions(
+                newOptions.toArray(new String[newOptions.size()][]),
+                errorReporter);
     }
 
     public static int optionLength(String option) {
-        return Standard.optionLength(option);
+        if (OPTION_SOURCE_CLASS_PATH.equals(option)) {
+            return 2;
+        }
+
+        int answer = Standard.optionLength(option);
+
+        if (option.equals("-help")) {
+            // Print the options provided by APIviz.
+            System.out.println();
+            System.out.println("Provided by APIviz doclet:");
+            System.out.println("-sourceclasspath <pathlist>       Specify where to find source class files");
+        }
+
+        return answer;
     }
 
     public static LanguageVersion languageVersion() {
@@ -138,9 +182,12 @@ public class APIviz {
                     graph.getOverviewSummaryDiagram(jdepend));
         } else {
             root.printWarning(
-                    "Please make sure that the '-classpath' option was specified correctly.");
+                    "Please make sure that the '" +
+                    OPTION_SOURCE_CLASS_PATH +
+                    "' option was specified correctly.");
             root.printWarning(
-                    "Package dependency diagram will not be generated to avoid the inaccurate result.");
+                    "Package dependency diagram will not be generated " +
+                    "to avoid the inaccurate result.");
         }
     }
 
@@ -160,14 +207,18 @@ public class APIviz {
                     continue;
                 }
 
+                boolean found = false;
                 String fqcn = c.containingPackage().name() + '.' + c.name();
                 JavaPackage jpkg = jdepend.getPackage(c.containingPackage().name());
-                Collection<JavaClass> jclasses = jpkg.getClasses();
-                boolean found = false;
-                for (JavaClass jcls: jclasses) {
-                    if (fqcn.equals(jcls.getName())) {
-                        found = true;
-                        break;
+                if (jpkg != null) {
+                    Collection<JavaClass> jclasses = jpkg.getClasses();
+                    if (jclasses != null) {
+                        for (JavaClass jcls: jclasses) {
+                            if (fqcn.equals(jcls.getName())) {
+                                found = true;
+                                break;
+                            }
+                        }
                     }
                 }
 
@@ -280,6 +331,16 @@ public class APIviz {
 
     private static File[] getClassPath(String[][] options) {
         List<File> cp = new ArrayList<File>();
+
+        for (String[] o: options) {
+            if (o[0].equals(OPTION_SOURCE_CLASS_PATH)) {
+                String[] cps = o[1].split(File.pathSeparator);
+                for (String p : cps) {
+                    cp.add(new File(p));
+                }
+            }
+        }
+
         for (String[] o: options) {
             if (o[0].equals("-classpath")) {
                 String[] cps = o[1].split(File.pathSeparator);

@@ -61,6 +61,10 @@ public class Constant {
     /* apiviz.inherit */
     public static final String TAG_INHERIT = TAG_PREFIX + "inherit";
 
+    // Options
+
+    public static final String OPTION_SOURCE_CLASS_PATH = "-sourceclasspath";
+
     private Constant() {
         // Unused
     }
