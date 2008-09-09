@@ -210,13 +210,13 @@ public class APIviz {
                 }
 
                 boolean found = false;
-                String fqcn = c.containingPackage().name() + '.' + c.name();
+                String fqcn = c.qualifiedTypeName();
                 JavaPackage jpkg = jdepend.getPackage(c.containingPackage().name());
                 if (jpkg != null) {
                     Collection<JavaClass> jclasses = jpkg.getClasses();
                     if (jclasses != null) {
                         for (JavaClass jcls: jclasses) {
-                            if (fqcn.equals(jcls.getName())) {
+                            if (fqcn.equals(jcls.getName().replace('$', '.'))) {
                                 found = true;
                                 break;
                             }
