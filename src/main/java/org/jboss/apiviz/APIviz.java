@@ -28,8 +28,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -330,7 +332,7 @@ public class APIviz {
     }
 
     private static File[] getClassPath(String[][] options) {
-        List<File> cp = new ArrayList<File>();
+        Set<File> cp = new LinkedHashSet<File>();
 
         for (String[] o: options) {
             if (o[0].equals(OPTION_SOURCE_CLASS_PATH)) {
