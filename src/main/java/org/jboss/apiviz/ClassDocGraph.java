@@ -849,14 +849,12 @@ public class ClassDocGraph {
         if (node.containingPackage() == pkg) {
             buf.append(node.name());
         } else {
-            String name = node.qualifiedName();
-            int dotIndex = name.lastIndexOf('.');
-            if (dotIndex < 0) {
-                buf.append(name);
+            if (node.containingPackage() == null) {
+                buf.append(node.name());
             } else {
-                buf.append(name.substring(dotIndex + 1));
+                buf.append(node.name());
                 buf.append("\\n(");
-                buf.append(name.substring(0, dotIndex));
+                buf.append(node.containingPackage().name());
                 buf.append(')');
             }
         }
@@ -878,7 +876,9 @@ public class ClassDocGraph {
         }
 
         String sourcePath = pkg.name().replace('.', '/');
-        String targetPath = node.qualifiedName().replace('.', '/') + ".html";
+        String targetPath =
+            node.containingPackage().name().replace('.', '/') + '/' +
+            node.name() + ".html";
         String[] sourcePathElements = sourcePath.split("[\\/\\\\]+");
         String[] targetPathElements = targetPath.split("[\\/\\\\]+");
 
