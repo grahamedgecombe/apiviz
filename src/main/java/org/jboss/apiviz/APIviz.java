@@ -247,10 +247,18 @@ public class APIviz {
 
     private static void generateClassDiagrams(RootDoc root, ClassDocGraph graph, File outputDirectory) throws IOException {
         for (ClassDoc c: root.classes()) {
-            instrumentDiagram(
-                    root, outputDirectory,
-                    c.qualifiedName().replace('.', File.separatorChar),
-                    graph.getClassDiagram(c));
+            if (c.containingPackage() == null) {
+                instrumentDiagram(
+                        root, outputDirectory,
+                        c.name(),
+                        graph.getClassDiagram(c));
+            } else {
+                instrumentDiagram(
+                        root, outputDirectory,
+                        c.containingPackage().name().replace('.', File.separatorChar) +
+                        File.separatorChar + c.name(),
+                        graph.getClassDiagram(c));
+            }
         }
     }
 
@@ -274,7 +282,8 @@ public class APIviz {
         File mapFile = new File(outputDirectory, filename + ".map");
 
         if (!htmlFile.exists()) {
-            // May be an inner class?
+            // Shouldn't reach here anymore.
+            // I'm retaining the code just in case.
             for (;;) {
                 int idx = filename.lastIndexOf(File.separatorChar);
                 if (idx > 0) {
