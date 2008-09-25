@@ -54,6 +54,7 @@
       <version>1.5</version>
       <scope>system</scope>
       <systemPath>${java.home}/../lib/tools.jar</systemPath>
+      <optional>true</optional>
     </dependency>
     
     <!-- JDepend for package dependency analysis -->
