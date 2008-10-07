@@ -242,6 +242,7 @@
           <descriptors>
             <descriptor>${basedir}/src/assembly/default.xml</descriptor>
           </descriptors>
+          <attach>false</attach>
           <appendAssemblyId>true</appendAssemblyId>
           <tarLongFileMode>gnu</tarLongFileMode>
         </configuration>
