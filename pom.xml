@@ -46,23 +46,57 @@
     </snapshotRepository>
   </distributionManagement>
 
-  <dependencies>
+  <properties>
+    <jdepend-version>2.9.1</jdepend-version>
+  </properties>
+
+  <profiles>
     <!-- SUN Standard Doclet -->
-    <dependency>
-      <groupId>com.sun.jdk</groupId>
-      <artifactId>jdk-tools</artifactId>
-      <version>1.5</version>
-      <scope>system</scope>
-      <systemPath>${java.home}/../lib/tools.jar</systemPath>
-      <optional>true</optional>
-    </dependency>
-    
+    <profile>
+      <id>default-tools.jar</id>
+      <activation>
+        <property>
+          <name>java.vendor</name>
+          <value>Sun Microsystems Inc.</value>
+        </property>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>com.sun</groupId>
+          <artifactId>tools</artifactId>
+          <version>1.4.2</version>
+          <scope>system</scope>
+          <systemPath>${java.home}/../lib/tools.jar</systemPath>
+          <optional>true</optional>
+        </dependency>
+      </dependencies>
+    </profile>
+
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+          <plugin>
+            <inherited>true</inherited>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <configuration>
+              <updateReleaseInfo>true</updateReleaseInfo>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+  <dependencies>
     <!-- JDepend for package dependency analysis -->
     <dependency>
       <groupId>jdepend</groupId>
       <artifactId>jdepend</artifactId>
-      <version>2.9.1</version>
+      <version>${jdepend-version}</version>
       <scope>compile</scope>
+      <optional>true</optional>
     </dependency>
 
     <!-- Testing -->
@@ -155,6 +189,9 @@
                         <include name="NOTICE.*" />
                         <include name="COPYRIGHT.*" />
                       </zipfileset>
+                      <zipfileset src="${settings.localRepository}/jdepend/jdepend/${jdepend-version}/jdepend-${jdepend-version}.jar" filemode="644" dirmode="755">
+                        <exclude name="META-INF/**" />
+                      </zipfileset>
                       <zipfileset src="${project.build.directory}/${project.build.finalName}.orig.jar" filemode="644" dirmode="755">
                         <exclude name="*/*/*/example/**" />
                         <exclude name="jdepend/**" />
@@ -191,29 +228,6 @@
         </dependencies>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>shade</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <artifactSet>
-            <excludes>
-              <exclude>junit:junit</exclude>
-              <exclude>com.sun.jdk</exclude>
-            </excludes>
-          </artifactSet>
-          <transformers>
-            <transformer implementation="org.apache.maven.plugins.shade.resource.ComponentsXmlResourceTransformer" />
-          </transformers>
-        </configuration>
-      </plugin>
-      <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>
           <execution>
@@ -245,21 +259,4 @@
       </plugin>
     </plugins>
   </build>
-  <profiles>
-    <profile>
-      <id>release</id>
-      <build>
-        <plugins>
-          <plugin>
-            <inherited>true</inherited>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-deploy-plugin</artifactId>
-            <configuration>
-              <updateReleaseInfo>true</updateReleaseInfo>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 </project>
