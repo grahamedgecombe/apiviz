@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.jboss.apiviz</groupId>
   <artifactId>apiviz</artifactId>
-  <version>1.2.5.GA</version>
+  <version>1.2.6.GA-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>APIviz</name>
@@ -29,8 +29,8 @@
   </licenses>
 
   <scm>
-    <connection>scm:svn:http://anonsvn.jboss.org/repos/apiviz/tags/apiviz-1.2.5.GA</connection>
-    <developerConnection>scm:svn:https://svn.jboss.org/repos/apiviz/tags/apiviz-1.2.5.GA</developerConnection>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/apiviz/trunk</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/apiviz/trunk</developerConnection>
   </scm>
 
   <distributionManagement>
