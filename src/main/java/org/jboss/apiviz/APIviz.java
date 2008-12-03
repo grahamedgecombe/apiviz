@@ -75,7 +75,9 @@ public class APIviz {
         try {
             File outputDirectory = getOutputDirectory(root.options());
             ClassDocGraph graph = new ClassDocGraph(root);
-            generateOverviewSummary(root, graph, outputDirectory);
+            if (shouldGeneratePackageDiagram(root.options())) {
+                generateOverviewSummary(root, graph, outputDirectory);
+            }
             generatePackageSummaries(root, graph, outputDirectory);
             generateClassDiagrams(root, graph, outputDirectory);
         } catch(Throwable t) {
@@ -114,6 +116,9 @@ public class APIviz {
             if (OPTION_SOURCE_CLASS_PATH.equals(o[0])) {
                 continue;
             }
+            if (OPTION_NO_PACKAGE_DIAGRAM.equals(o[0])) {
+                continue;
+            }
 
             newOptions.add(o);
         }
@@ -128,6 +133,10 @@ public class APIviz {
             return 2;
         }
 
+        if (OPTION_NO_PACKAGE_DIAGRAM.equals(option)) {
+            return 1;
+        }
+
         int answer = Standard.optionLength(option);
 
         if (option.equals("-help")) {
@@ -135,6 +144,7 @@ public class APIviz {
             System.out.println();
             System.out.println("Provided by APIviz doclet:");
             System.out.println("-sourceclasspath <pathlist>       Specify where to find source class files");
+            System.out.println("-nopackagediagram                 Do not generate the package diagram in the overview summary");
         }
 
         return answer;
@@ -338,6 +348,15 @@ public class APIviz {
 
         // Fall back to the current working directory.
         return new File(System.getProperty("user.dir", "."));
+    }
+
+    private static boolean shouldGeneratePackageDiagram(String[][] options) {
+        for (String[] o: options) {
+            if (o[0].equals(OPTION_NO_PACKAGE_DIAGRAM)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static File[] getClassPath(String[][] options) {

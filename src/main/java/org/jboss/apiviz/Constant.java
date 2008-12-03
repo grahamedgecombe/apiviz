@@ -63,6 +63,7 @@ public class Constant {
 
     // Options
 
+    public static final String OPTION_NO_PACKAGE_DIAGRAM = "-nopackagediagram";
     public static final String OPTION_SOURCE_CLASS_PATH = "-sourceclasspath";
 
     private Constant() {
