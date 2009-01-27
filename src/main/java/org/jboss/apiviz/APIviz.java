@@ -66,8 +66,9 @@ public class APIviz {
             return false;
         }
 
-        if (!Graphviz.isAvailable()) {
-            root.printWarning("Graphviz is not found in the system path.");
+        if (!Graphviz.isAvailable(root)) {
+            root.printWarning("Graphviz is not found.");
+            root.printWarning("Please install graphviz and specify -Dgraphviz.home Otherwise, you might have specified incorrect graphviz home Graphviz is not found in the system path.");
             root.printWarning("Skipping diagram generation.");
             return true;
         }
@@ -313,7 +314,7 @@ public class APIviz {
         }
 
         root.printNotice("Generating " + pngFile + "...");
-        Graphviz.writeImageAndMap(diagram, outputDirectory, filename);
+        Graphviz.writeImageAndMap(root, diagram, outputDirectory, filename);
 
         try {
             String oldContent = FileUtil.readFile(htmlFile);
