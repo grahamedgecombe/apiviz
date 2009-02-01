@@ -41,6 +41,8 @@ import com.sun.javadoc.RootDoc;
  */
 public class Graphviz {
 
+    private static File home;
+
     public static boolean isAvailable(RootDoc root) {
         String executable = Graphviz.getExecutable(root);
         File home = Graphviz.getHome(root);
@@ -179,6 +181,10 @@ public class Graphviz {
     }
 
     private static File getHome(RootDoc root) {
+        if (home != null) {
+            return home;
+        }
+
         File graphvizDir = null;
         try {
             String graphvizHome = System.getProperty("graphviz.home");
@@ -215,7 +221,7 @@ public class Graphviz {
         } catch (Exception e) {
             // ignore...
         }
-        return graphvizDir;
+        return home = graphvizDir;
     }
 
     private Graphviz() {
