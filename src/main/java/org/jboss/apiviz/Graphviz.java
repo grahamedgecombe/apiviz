@@ -203,7 +203,7 @@ public class Graphviz {
                             graphvizHome);
                 } else {
                     root.printNotice(
-                    "The 'GRAPHVIZ_HOME' environment variable was not specified.");
+                            "The 'GRAPHVIZ_HOME' environment variable was not specified.");
                 }
             }
             if (graphvizHome != null) {
