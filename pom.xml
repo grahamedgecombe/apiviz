@@ -260,4 +260,50 @@
       </plugin>
     </plugins>
   </build>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <!-- reuse our just compiled version to run javadoc against our tests.  Cheeky huh? -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.5</version>
+        <configuration>
+          <doclet>org.jboss.apiviz.APIviz</doclet>
+          <docletArtifact>
+            <groupId>org.jboss.apiviz</groupId>
+            <artifactId>apiviz</artifactId>
+            <version>${version}</version>
+          </docletArtifact>
+          <useStandardDocletOptions>true</useStandardDocletOptions>
+          <docencoding>UTF-8</docencoding>
+          <encoding>UTF-8</encoding>
+          <charset>UTF-8</charset>
+          <locale>en_US</locale>
+          <author>true</author>
+          <version>true</version>
+          <keywords>true</keywords>
+          <breakiterator>true</breakiterator>
+          <additionalparam>
+            -link http://java.sun.com/javase/6/docs/api/
+            -sourceclasspath ${project.build.outputDirectory}
+          </additionalparam>
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <id>html</id>
+            <reports>
+              <report>javadoc</report>
+            </reports>
+          </reportSet>
+          <reportSet>
+            <id>test-html</id>
+            <reports>
+              <report>test-javadoc</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>
