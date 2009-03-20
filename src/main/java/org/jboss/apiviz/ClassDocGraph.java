@@ -62,14 +62,46 @@ public class ClassDocGraph {
     private final Map<String, ClassDoc> nodes = new TreeMap<String, ClassDoc>();
     private final Map<ClassDoc, Set<Edge>> edges = new HashMap<ClassDoc, Set<Edge>>();
     private final Map<ClassDoc, Set<Edge>> reversedEdges = new HashMap<ClassDoc, Set<Edge>>();
+    private int nonconfiguredCategoryCount = 0;
+
+    /**
+     * Key = category name<br>
+     * Value = color
+     */
+    private final Map<String, CategoryOptions> categories = new HashMap<String, CategoryOptions>();
 
     public ClassDocGraph(RootDoc root) {
         this.root = root;
+
+        //get the colors for the categories
+        for (final String[] option : root.options()) {
+            if (OPTION_CATEGORY_FILL_COLOR.equals(option[0])) {
+                if (option.length == 2 || option[1].split(":").length < 2) {
+                    final String[] split = option[1].split(":");
+                    String lineColor = null;
+                    if (split.length > 2) {
+                        lineColor = split[2];
+                    }
+                    addCategory(split[0], split[1], lineColor);
+                } else {
+                    root.printWarning("Bad " + OPTION_CATEGORY_FILL_COLOR +
+                            ", Ignoring.  Use format '" + OPTION_CATEGORY_FILL_COLOR +
+                            " <category>[:<fillcolor>[:linecolor]]");
+                }
+            }
+        }
 
         root.printNotice("Building graph for all classes...");
         for (ClassDoc node: root.classes()) {
             addNode(node, true);
         }
+    }
+
+    private void addCategory(final String categoryName, final String fillColor, final String lineColor) {
+        if (categories.containsKey(categoryName)) {
+            root.printWarning("Category defined multiple times: " + categoryName);
+        }
+        categories.put(categoryName, new CategoryOptions(fillColor, lineColor));
     }
 
     private void addNode(ClassDoc node, boolean addRelatedClasses) {
@@ -399,6 +431,19 @@ public class ClassDocGraph {
         return buf.toString();
     }
 
+    private void checkCategoryExistance(Doc node) {
+        //check the if the category for this class exists
+        if (node.tags(TAG_CATEGORY).length > 0 && !categories.containsKey(node.tags(TAG_CATEGORY)[0].text())) {
+            final String categoryName = node.tags(TAG_CATEGORY)[0].text();
+            if (ColorCombination.values().length > nonconfiguredCategoryCount) {
+                categories.put(categoryName, new CategoryOptions(ColorCombination.values()[nonconfiguredCategoryCount]));
+            } else {
+                categories.put(categoryName, new CategoryOptions("#FFFFFF", null));
+            }
+            nonconfiguredCategoryCount++;
+        }
+    }
+
     private void fetchSubgraph(
             PackageDoc pkg, ClassDoc cls,
             Map<String, ClassDoc> nodesToRender, Set<Edge> edgesToRender,
@@ -641,8 +686,9 @@ public class ClassDocGraph {
         }
     }
 
-    private static void renderPackage(
+    private  void renderPackage(
             StringBuilder buf, PackageDoc pkg, int prefixLen) {
+        checkCategoryExistance(pkg);
 
         String href = pkg.name().replace('.', '/') + "/package-summary.html";
         buf.append(getNodeId(pkg));
@@ -660,7 +706,9 @@ public class ClassDocGraph {
         buf.append(NEWLINE);
     }
 
-    private static void renderClass(PackageDoc pkg, ClassDoc cls, StringBuilder buf, ClassDoc node) {
+    private void renderClass(PackageDoc pkg, ClassDoc cls, StringBuilder buf, ClassDoc node) {
+        checkCategoryExistance(node);
+
         String fillColor = getFillColor(pkg, cls, node);
         String lineColor = getLineColor(pkg, node);
         String fontColor = getFontColor(pkg, node);
@@ -775,39 +823,93 @@ public class ClassDocGraph {
         return staticType && methods > 0;
     }
 
-    private static String getFillColor(PackageDoc pkg) {
+    private String getFillColor(PackageDoc pkg) {
         String color = "white";
+        if (pkg.tags(TAG_CATEGORY).length > 0 && categories.containsKey(pkg.tags(TAG_CATEGORY)[0].text())) {
+            color = categories.get(pkg.tags(TAG_CATEGORY)[0].text()).getFillColor();
+        }
         if (pkg.tags(TAG_LANDMARK).length > 0) {
             color = "khaki1";
         }
         return color;
     }
 
-    private static String getFillColor(PackageDoc pkg, ClassDoc cls, ClassDoc node) {
+    private String getFillColor(PackageDoc pkg, ClassDoc cls, ClassDoc node) {
         String color = "white";
         if (cls == null) {
+            //we are rendering for a package summary since there is no cls
+
+            //see if the node has a fill color
+            if (node.tags(TAG_CATEGORY).length > 0 && categories.containsKey(node.tags(TAG_CATEGORY)[0].text())) {
+                    color = categories.get(node.tags(TAG_CATEGORY)[0].text()).getFillColor();
+            }
+
+            //override any previous values if a landmark is set
             if (node.containingPackage() == pkg && node.tags(TAG_LANDMARK).length > 0) {
-                color = "khaki1";
+                    color = "khaki1";
             }
         } else if (cls == node) {
+            //this is class we are rending the class diagram for
             color = "khaki1";
+        } else if (node.tags(TAG_CATEGORY).length > 0 && categories.containsKey(node.tags(TAG_CATEGORY)[0].text())) {
+            //not the class for the class diagram so use its fill color
+            color = categories.get(node.tags(TAG_CATEGORY)[0].text()).getFillColor();
+            if (node.containingPackage() != pkg && color.startsWith("#")) {
+                //grey out the fill color
+                final StringBuffer sb = new StringBuffer("#");
+                sb.append(shiftColor(color.substring(1,3)));
+                sb.append(shiftColor(color.substring(3,5)));
+                sb.append(shiftColor(color.substring(5,7)));
+                color = sb.toString();
+            }
+            
         }
         return color;
     }
 
-    private static String getLineColor(PackageDoc pkg, ClassDoc doc) {
-        String color = "black";
+    /**
+     * Does the greying out effect
+     * @param number
+     * @return
+     */
+    private static String shiftColor(String number) {
+        Integer colorValue = Integer.parseInt(number, 16);
+        colorValue = colorValue + 0x4D; //aproach white
+        if (colorValue > 0xFF) {
+            colorValue = 0xFF;
+        }
+        return Integer.toHexString(colorValue);
+    }
+
+    private String getLineColor(PackageDoc pkg, ClassDoc doc) {
+        String color = "#000000";
+        if (doc.tags(TAG_CATEGORY).length > 0 && categories.containsKey(doc.tags(TAG_CATEGORY)[0].text())) {
+            color = categories.get(doc.tags(TAG_CATEGORY)[0].text()).getLineColor();
+        }
         if (!(doc.containingPackage() == pkg)) {
-            color = "gray";
+            //grey out the fill color
+            final StringBuffer sb = new StringBuffer("#");
+            sb.append(shiftColor(color.substring(1,3)));
+            sb.append(shiftColor(color.substring(3,5)));
+            sb.append(shiftColor(color.substring(5,7)));
+            color = sb.toString();
         }
         return color;
     }
 
-    private static String getLineColor(PackageDoc pkg, Edge edge) {
+    private String getLineColor(PackageDoc pkg, Edge edge) {
         if (edge.getTarget() instanceof ClassDoc) {
+            //we have a class
             return getLineColor(pkg, (ClassDoc) edge.getTarget());
         } else {
-            return "black";
+            //not a class (a package or something)
+            String color = "#000000";
+            if (pkg != null &&
+                    pkg.tags(TAG_CATEGORY).length > 0 &&
+                    categories.containsKey(pkg.tags(TAG_CATEGORY)[0].text())) {
+                color = categories.get(pkg.tags(TAG_CATEGORY)[0].text()).getLineColor();
+            }
+            return color;
         }
     }
 
@@ -900,5 +1002,33 @@ public class ClassDocGraph {
             buf.append(targetPathElements[i]);
         }
         return buf.substring(1);
+    }
+
+    protected class CategoryOptions {
+        private String fillColor = "#FFFFFF";
+        private String lineColor = "#000000";
+
+        protected CategoryOptions(final String fillColor, final String lineColor) {
+            this.fillColor = Color.resolveColor(fillColor);
+            if (lineColor != null) {
+                this.lineColor = Color.resolveColor(lineColor);
+            }
+            root.printNotice("Category Options: " + this.fillColor + " - " + this.lineColor);
+        }
+
+        protected CategoryOptions(final ColorCombination combination) {
+            this.fillColor = combination.getFillColor().getRgbValue();
+            this.lineColor = combination.getLineColor().getRgbValue();
+            root.printNotice("Category Options: " + this.fillColor + " - " + this.lineColor);
+        }
+
+        public String getFillColor() {
+            return fillColor;
+        }
+
+        public String getLineColor() {
+            return lineColor;
+        }
+
     }
 }

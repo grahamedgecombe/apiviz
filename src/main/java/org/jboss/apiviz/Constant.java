@@ -61,10 +61,14 @@ public class Constant {
     /* apiviz.inherit */
     public static final String TAG_INHERIT = TAG_PREFIX + "inherit";
 
+    /* apiviz.category <categoryname>*/
+    public static final String TAG_CATEGORY = TAG_PREFIX + "category";
+
     // Options
 
     public static final String OPTION_NO_PACKAGE_DIAGRAM = "-nopackagediagram";
     public static final String OPTION_SOURCE_CLASS_PATH = "-sourceclasspath";
+    public static final String OPTION_CATEGORY_FILL_COLOR = "-categoryfillcolor";
 
     private Constant() {
         // Unused

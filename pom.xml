@@ -260,7 +260,6 @@
       </plugin>
     </plugins>
   </build>
-
   <reporting>
     <plugins>
       <plugin>
@@ -287,6 +286,10 @@
           <additionalparam>
             -link http://java.sun.com/javase/6/docs/api/
             -sourceclasspath ${project.build.outputDirectory}
+            -categoryfillcolor <![CDATA["default:#00FF5d:#40E0D0"]]>
+            -categoryfillcolor <![CDATA["aCategory:#fdc298:#FF6347"]]>
+            -categoryfillcolor <![CDATA["bCategory:#d082fe"]]>
+            -categoryfillcolor testColor:skyblue2:royalblue3
           </additionalparam>
         </configuration>
         <reportSets>
