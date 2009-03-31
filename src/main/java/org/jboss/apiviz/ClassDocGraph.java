@@ -710,7 +710,7 @@ public class ClassDocGraph {
         checkCategoryExistance(node);
 
         String fillColor = getFillColor(pkg, cls, node);
-        String lineColor = getLineColor(pkg, node);
+        String lineColor = getLineColor(pkg, cls, node);
         String fontColor = getFontColor(pkg, node);
         String href = getPath(pkg, node);
 
@@ -881,13 +881,13 @@ public class ClassDocGraph {
         return Integer.toHexString(colorValue);
     }
 
-    private String getLineColor(PackageDoc pkg, ClassDoc doc) {
+    private String getLineColor(PackageDoc pkg, ClassDoc cls, ClassDoc node) {
         String color = "#000000";
-        if (doc.tags(TAG_LANDMARK).length <= 0 && doc.tags(TAG_CATEGORY).length > 0 && categories.containsKey(doc.tags(TAG_CATEGORY)[0].text())) {
-            color = categories.get(doc.tags(TAG_CATEGORY)[0].text()).getLineColor();
+        if (cls != node && node.tags(TAG_LANDMARK).length <= 0 && node.tags(TAG_CATEGORY).length > 0 && categories.containsKey(node.tags(TAG_CATEGORY)[0].text())) {
+            color = categories.get(node.tags(TAG_CATEGORY)[0].text()).getLineColor();
         }
 
-        if (doc.containingPackage() != pkg) {
+        if (node.containingPackage() != pkg) {
             //grey out the fill color
             final StringBuffer sb = new StringBuffer("#");
             sb.append(shiftColor(color.substring(1,3)));
@@ -901,7 +901,10 @@ public class ClassDocGraph {
     private String getLineColor(PackageDoc pkg, Edge edge) {
         if (edge.getTarget() instanceof ClassDoc) {
             //we have a class
-            return getLineColor(pkg, (ClassDoc) edge.getTarget());
+            return getLineColor(
+                    pkg,
+                    (ClassDoc) edge.getSource(),
+                    (ClassDoc) edge.getTarget());
         } else {
             //not a class (a package or something)
             String color = "#000000";
