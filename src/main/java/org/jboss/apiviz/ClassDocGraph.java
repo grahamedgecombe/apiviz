@@ -841,12 +841,12 @@ public class ClassDocGraph {
 
             //see if the node has a fill color
             if (node.tags(TAG_CATEGORY).length > 0 && categories.containsKey(node.tags(TAG_CATEGORY)[0].text())) {
-                    color = categories.get(node.tags(TAG_CATEGORY)[0].text()).getFillColor();
+                color = categories.get(node.tags(TAG_CATEGORY)[0].text()).getFillColor();
             }
 
             //override any previous values if a landmark is set
             if (node.containingPackage() == pkg && node.tags(TAG_LANDMARK).length > 0) {
-                    color = "khaki1";
+                color = "khaki1";
             }
         } else if (cls == node) {
             //this is class we are rending the class diagram for
