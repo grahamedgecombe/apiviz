@@ -694,13 +694,13 @@ public enum Color {
             return null;
         }
 
-        if (colorName.startsWith("#")) {
+        if (colorName.matches("^[!@#$%^&*+=][0-9A-Fa-f]{6}$")) {
             //we already have an rgb
-            return colorName;
+            return "#" + colorName.substring(1);
         }
 
         final Color color = Color.valueOf(colorName.toLowerCase()); //all our enums are lowercase, so lets be nice
         return color.getRgbValue();
     }
-    
+
 }

@@ -114,7 +114,7 @@ public class APIviz {
 
         List<String[]> newOptions = new ArrayList<String[]>();
         for (String[] o: options) {
-            if (OPTION_CATEGORY_FILL_COLOR.equals(o[0])) {
+            if (OPTION_CATEGORY.equals(o[0])) {
                 continue;
             }
             if (OPTION_SOURCE_CLASS_PATH.equals(o[0])) {
@@ -133,10 +133,10 @@ public class APIviz {
     }
 
     public static int optionLength(String option) {
-        if (OPTION_CATEGORY_FILL_COLOR.equals(option)) {
+        if (OPTION_CATEGORY.equals(option)) {
             return 2;
         }
-        
+
         if (OPTION_SOURCE_CLASS_PATH.equals(option)) {
             return 2;
         }
@@ -151,9 +151,10 @@ public class APIviz {
             // Print the options provided by APIviz.
             System.out.println();
             System.out.println("Provided by APIviz doclet:");
-            System.out.println(OPTION_SOURCE_CLASS_PATH   + " <pathlist>         Specify where to find source class files");
-            System.out.println(OPTION_NO_PACKAGE_DIAGRAM  + "                    Do not generate the package diagram in the overview summary");
-            System.out.println(OPTION_CATEGORY_FILL_COLOR + " <category>[:<fillcolor>[:<linecolor>]] Color for items marked with " + TAG_CATEGORY);
+            System.out.println(OPTION_SOURCE_CLASS_PATH   + " <pathlist>      Specify where to find source class files");
+            System.out.println(OPTION_NO_PACKAGE_DIAGRAM  + "                Do not generate the package dependency diagram");
+            System.out.println(OPTION_CATEGORY + " <categoryname>[:<fillcolor>[:<linecolor>]]");
+            System.out.println("                    Specify the color of the items tagged with " + TAG_CATEGORY);
         }
 
         return answer;

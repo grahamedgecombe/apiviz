@@ -66,9 +66,9 @@ public class Constant {
 
     // Options
 
-    public static final String OPTION_NO_PACKAGE_DIAGRAM = "-nopackagediagram";
-    public static final String OPTION_SOURCE_CLASS_PATH = "-sourceclasspath";
-    public static final String OPTION_CATEGORY_FILL_COLOR = "-categoryfillcolor";
+    public static final String OPTION_NO_PACKAGE_DIAGRAM  = "-nopackagediagram";
+    public static final String OPTION_SOURCE_CLASS_PATH   = "-sourceclasspath";
+    public static final String OPTION_CATEGORY = "-category";
 
     private Constant() {
         // Unused

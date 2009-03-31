@@ -75,7 +75,7 @@ public class ClassDocGraph {
 
         //get the colors for the categories
         for (final String[] option : root.options()) {
-            if (OPTION_CATEGORY_FILL_COLOR.equals(option[0])) {
+            if (OPTION_CATEGORY.equals(option[0])) {
                 if (option.length == 2 || option[1].split(":").length < 2) {
                     final String[] split = option[1].split(":");
                     String lineColor = null;
@@ -84,9 +84,9 @@ public class ClassDocGraph {
                     }
                     addCategory(split[0], split[1], lineColor);
                 } else {
-                    root.printWarning("Bad " + OPTION_CATEGORY_FILL_COLOR +
-                            ", Ignoring.  Use format '" + OPTION_CATEGORY_FILL_COLOR +
-                            " <category>[:<fillcolor>[:linecolor]]");
+                    root.printWarning("Bad " + OPTION_CATEGORY +
+                            ", Ignoring.  Use format '" + OPTION_CATEGORY +
+                            " <category>[:<fillcolor>[:linecolor]]'");
                 }
             }
         }
@@ -101,7 +101,7 @@ public class ClassDocGraph {
         if (categories.containsKey(categoryName)) {
             root.printWarning("Category defined multiple times: " + categoryName);
         }
-        categories.put(categoryName, new CategoryOptions(fillColor, lineColor));
+        categories.put(categoryName, new CategoryOptions(categoryName, fillColor, lineColor));
     }
 
     private void addNode(ClassDoc node, boolean addRelatedClasses) {
@@ -436,11 +436,11 @@ public class ClassDocGraph {
         if (node.tags(TAG_CATEGORY).length > 0 && !categories.containsKey(node.tags(TAG_CATEGORY)[0].text())) {
             final String categoryName = node.tags(TAG_CATEGORY)[0].text();
             if (ColorCombination.values().length > nonconfiguredCategoryCount) {
-                categories.put(categoryName, new CategoryOptions(ColorCombination.values()[nonconfiguredCategoryCount]));
+                categories.put(categoryName, new CategoryOptions(categoryName, ColorCombination.values()[nonconfiguredCategoryCount]));
+                nonconfiguredCategoryCount++;
             } else {
-                categories.put(categoryName, new CategoryOptions("#FFFFFF", null));
+                categories.put(categoryName, new CategoryOptions(categoryName, "#FFFFFF", null));
             }
-            nonconfiguredCategoryCount++;
         }
     }
 
@@ -854,7 +854,7 @@ public class ClassDocGraph {
         } else if (node.tags(TAG_CATEGORY).length > 0 && categories.containsKey(node.tags(TAG_CATEGORY)[0].text())) {
             //not the class for the class diagram so use its fill color
             color = categories.get(node.tags(TAG_CATEGORY)[0].text()).getFillColor();
-            if (node.containingPackage() != pkg && color.startsWith("#")) {
+            if (node.containingPackage() != pkg && color.matches("^[!@#$%^&*+=][0-9A-Fa-f]{6}$")) {
                 //grey out the fill color
                 final StringBuffer sb = new StringBuffer("#");
                 sb.append(shiftColor(color.substring(1,3)));
@@ -862,7 +862,6 @@ public class ClassDocGraph {
                 sb.append(shiftColor(color.substring(5,7)));
                 color = sb.toString();
             }
-
         }
         return color;
     }
@@ -1012,18 +1011,18 @@ public class ClassDocGraph {
         private String fillColor = "#FFFFFF";
         private String lineColor = "#000000";
 
-        protected CategoryOptions(final String fillColor, final String lineColor) {
+        protected CategoryOptions(String catName, final String fillColor, final String lineColor) {
             this.fillColor = Color.resolveColor(fillColor);
             if (lineColor != null) {
                 this.lineColor = Color.resolveColor(lineColor);
             }
-            root.printNotice("Category Options: " + this.fillColor + " - " + this.lineColor);
+            root.printNotice("Category Options: " + catName + ", " + fillColor + ", " + lineColor);
         }
 
-        protected CategoryOptions(final ColorCombination combination) {
+        protected CategoryOptions(String catName, final ColorCombination combination) {
             fillColor = combination.getFillColor().getRgbValue();
             lineColor = combination.getLineColor().getRgbValue();
-            root.printNotice("Category Options: " + fillColor + " - " + lineColor);
+            root.printNotice("Category Options: " + catName + ", " + fillColor + ", " + lineColor);
         }
 
         public String getFillColor() {
