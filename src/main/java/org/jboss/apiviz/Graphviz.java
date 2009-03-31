@@ -70,7 +70,7 @@ public class Graphviz {
 
             String line = null;
             while((line = in.readLine()) != null) {
-                if (line.indexOf("Graphviz") >= 0) {
+                if (line.matches("^.*[Gg][Rr][Aa][Pp][Hh][Vv][Ii][Zz].*$")) {
                     return true;
                 }
             }
