@@ -71,7 +71,10 @@ public class Graphviz {
             String line = null;
             while((line = in.readLine()) != null) {
                 if (line.matches("^.*[Gg][Rr][Aa][Pp][Hh][Vv][Ii][Zz].*$")) {
+                    root.printNotice("Found: " + line);
                     return true;
+                } else {
+                    root.printWarning("Unknown Graphviz output: " + line);
                 }
             }
             return false;
