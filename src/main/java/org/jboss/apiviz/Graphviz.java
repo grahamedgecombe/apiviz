@@ -41,6 +41,7 @@ import com.sun.javadoc.RootDoc;
  */
 public class Graphviz {
 
+    private static boolean homeDetermined;
     private static File home;
 
     public static boolean isAvailable(RootDoc root) {
@@ -71,7 +72,7 @@ public class Graphviz {
             String line = null;
             while((line = in.readLine()) != null) {
                 if (line.matches("^.*[Gg][Rr][Aa][Pp][Hh][Vv][Ii][Zz].*$")) {
-                    root.printNotice("Found: " + line);
+                    root.printNotice("Graphviz Version: " + line);
                     return true;
                 } else {
                     root.printWarning("Unknown Graphviz output: " + line);
@@ -184,7 +185,7 @@ public class Graphviz {
     }
 
     private static File getHome(RootDoc root) {
-        if (home != null) {
+        if (homeDetermined) {
             return home;
         }
 
@@ -215,15 +216,18 @@ public class Graphviz {
                     root.printWarning(
                             "The specified graphviz home directory does not exist: " +
                             graphvizDir.getPath());
-                    return null;
+                    graphvizDir = null;
                 }
-            } else {
+            }
+
+            if (graphvizDir == null) {
                 root.printNotice(
                         "System path will be used as graphviz home directory was not specified.");
             }
         } catch (Exception e) {
             // ignore...
         }
+        homeDetermined = true;
         return home = graphvizDir;
     }
 
