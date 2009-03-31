@@ -883,10 +883,11 @@ public class ClassDocGraph {
 
     private String getLineColor(PackageDoc pkg, ClassDoc doc) {
         String color = "#000000";
-        if (doc.tags(TAG_CATEGORY).length > 0 && categories.containsKey(doc.tags(TAG_CATEGORY)[0].text())) {
+        if (doc.tags(TAG_LANDMARK).length <= 0 && doc.tags(TAG_CATEGORY).length > 0 && categories.containsKey(doc.tags(TAG_CATEGORY)[0].text())) {
             color = categories.get(doc.tags(TAG_CATEGORY)[0].text()).getLineColor();
         }
-        if (!(doc.containingPackage() == pkg)) {
+
+        if (doc.containingPackage() != pkg) {
             //grey out the fill color
             final StringBuffer sb = new StringBuffer("#");
             sb.append(shiftColor(color.substring(1,3)));
