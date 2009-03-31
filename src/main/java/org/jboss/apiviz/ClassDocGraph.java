@@ -58,7 +58,7 @@ import com.sun.javadoc.Tag;
  */
 public class ClassDocGraph {
 
-    private final RootDoc root;
+    final RootDoc root;
     private final Map<String, ClassDoc> nodes = new TreeMap<String, ClassDoc>();
     private final Map<ClassDoc, Set<Edge>> edges = new HashMap<ClassDoc, Set<Edge>>();
     private final Map<ClassDoc, Set<Edge>> reversedEdges = new HashMap<ClassDoc, Set<Edge>>();
@@ -862,7 +862,7 @@ public class ClassDocGraph {
                 sb.append(shiftColor(color.substring(5,7)));
                 color = sb.toString();
             }
-            
+
         }
         return color;
     }
@@ -1017,9 +1017,9 @@ public class ClassDocGraph {
         }
 
         protected CategoryOptions(final ColorCombination combination) {
-            this.fillColor = combination.getFillColor().getRgbValue();
-            this.lineColor = combination.getLineColor().getRgbValue();
-            root.printNotice("Category Options: " + this.fillColor + " - " + this.lineColor);
+            fillColor = combination.getFillColor().getRgbValue();
+            lineColor = combination.getLineColor().getRgbValue();
+            root.printNotice("Category Options: " + fillColor + " - " + lineColor);
         }
 
         public String getFillColor() {
