@@ -279,6 +279,7 @@ public class ClassDocGraph {
                 "center=1;" + NEWLINE +
                 "remincross=true;" + NEWLINE +
                 "searchsize=65536;" + NEWLINE +
+                "splines=polyline;" + NEWLINE +
                 "edge [fontsize=10, fontname=\"" + NORMAL_FONT + "\", " +
                 "style=\"setlinewidth(0.6)\"]; " + NEWLINE +
                 "node [shape=box, fontsize=10, fontname=\"" + NORMAL_FONT + "\", " +
@@ -411,6 +412,7 @@ public class ClassDocGraph {
                 "center=1;" + NEWLINE +
                 "remincross=true;" + NEWLINE +
                 "searchsize=65536;" + NEWLINE +
+                "splines=polyline;" + NEWLINE +
                 "edge [fontsize=10, fontname=\"" + NORMAL_FONT + "\", " +
                 "style=\"setlinewidth(0.6)\"]; " + NEWLINE +
                 "node [shape=box, fontsize=10, fontname=\"" + NORMAL_FONT + "\", " +
@@ -658,6 +660,7 @@ public class ClassDocGraph {
                 "center=1;" + NEWLINE +
                 "remincross=true;" + NEWLINE +
                 "searchsize=65536;" + NEWLINE +
+                "splines=polyline;" + NEWLINE +
                 "edge [fontsize=10, fontname=\"" + NORMAL_FONT + "\", " +
                 "style=\"setlinewidth(0.6)\"]; " + NEWLINE +
                 "node [shape=box, fontsize=10, fontname=\"" + NORMAL_FONT + "\", " +
