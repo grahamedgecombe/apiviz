@@ -273,7 +273,7 @@ public class ClassDocGraph {
                 "digraph APIVIZ {" + NEWLINE +
                 "rankdir=LR;" + NEWLINE +
                 "ranksep=0.3;" + NEWLINE +
-                "nodesep=0.3;" + NEWLINE +
+                "nodesep=0.2;" + NEWLINE +
                 "mclimit=128;" + NEWLINE +
                 "outputorder=edgesfirst;" + NEWLINE +
                 "center=1;" + NEWLINE +
@@ -406,7 +406,7 @@ public class ClassDocGraph {
                 "digraph APIVIZ {" + NEWLINE +
                 "rankdir=LR;" + NEWLINE +
                 "ranksep=0.3;" + NEWLINE +
-                "nodesep=0.3;" + NEWLINE +
+                "nodesep=0.25;" + NEWLINE +
                 "mclimit=1024;" + NEWLINE +
                 "outputorder=edgesfirst;" + NEWLINE +
                 "center=1;" + NEWLINE +
