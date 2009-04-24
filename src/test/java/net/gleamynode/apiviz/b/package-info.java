@@ -21,6 +21,8 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 /**
+ * Package to demonstrate fading colors across packages.
+ * Used in conjection with net.gleamynode.apiviz.a.
  * @apiviz.category bCategory
  */
 package net.gleamynode.apiviz.b;

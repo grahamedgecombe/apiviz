@@ -31,6 +31,6 @@ import net.gleamynode.apiviz.a.A;
  */
 public interface B {
 
-     public abstract void soSomethingWithA(final A a);
+     public abstract void doSomethingWithA(final A a);
 
 }

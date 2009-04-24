@@ -23,9 +23,15 @@
 package net.gleamynode.apiviz.a;
 
 /**
+ * Has a list of fields with different accessors.
  * @apiviz.category aCategory
  * @author bsneade
  */
 public abstract class AbstractA implements A {
+
+    public Object abstractPublicField;
+    protected String abstractProtectedField;
+    Integer abstractFriendlyField;
+    private Number abstractPrivateField;
 
 }

@@ -21,6 +21,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 /**
+ * Package to demonstrate fading colors across packages.
+ * Used in conjection with net.gleamynode.apiviz.b.  Also has some classes with
+ * fields and methods to check that out.
  * @apiviz.category aCategory
  */
 package net.gleamynode.apiviz.a;

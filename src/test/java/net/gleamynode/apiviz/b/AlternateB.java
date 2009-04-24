@@ -31,7 +31,7 @@ import net.gleamynode.apiviz.a.A;
  */
 public class AlternateB extends AbstractB {
 
-    public void soSomethingWithA(A a) {
+    public void doSomethingWithA(A a) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

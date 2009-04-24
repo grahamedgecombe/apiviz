@@ -123,6 +123,12 @@ public class APIviz {
             if (OPTION_NO_PACKAGE_DIAGRAM.equals(o[0])) {
                 continue;
             }
+            if (OPTION_SHOW_FIELDS.equals(o[0])) {
+                continue;
+            }
+            if (OPTION_SHOW_METHODS.equals(o[0])) {
+                continue;
+            }
 
             newOptions.add(o);
         }
@@ -145,16 +151,28 @@ public class APIviz {
             return 1;
         }
 
+        if (OPTION_SHOW_FIELDS.equals(option)) {
+            return 1;
+        }
+
+        if (OPTION_SHOW_METHODS.equals(option)) {
+            return 1;
+        }
+
         int answer = Standard.optionLength(option);
 
-        if (option.equals("-help")) {
+        if (option.equals(OPTION_HELP)) {
             // Print the options provided by APIviz.
             System.out.println();
             System.out.println("Provided by APIviz doclet:");
-            System.out.println(OPTION_SOURCE_CLASS_PATH   + " <pathlist>      Specify where to find source class files");
-            System.out.println(OPTION_NO_PACKAGE_DIAGRAM  + "                Do not generate the package dependency diagram");
-            System.out.println(OPTION_CATEGORY + " <categoryname>[:<fillcolor>[:<linecolor>]]");
-            System.out.println("                    Specify the color of the items tagged with " + TAG_CATEGORY);
+            System.out.println(OPTION_SOURCE_CLASS_PATH   + " <pathlist>     Specify where to find source class files");
+            System.out.println(OPTION_NO_PACKAGE_DIAGRAM  + "               Do not generate the package diagram in the overview summary");
+            System.out.println(OPTION_CATEGORY + "                       <category>[:<fillcolor>[:<linecolor>]] ");
+            System.out.println("                                    Color for items marked with " + TAG_CATEGORY);
+            System.out.println(OPTION_SHOW_FIELDS + "                     Renders the fields of classes at the level specified by ");
+            System.out.println("                                    javadoc options -(public|protected|package|private)");
+            System.out.println(OPTION_SHOW_METHODS + "                    Renders the methods of classes at the level specified by ");
+            System.out.println("                                    javadoc options -(public|protected|package|private)");
         }
 
         return answer;
@@ -295,6 +313,9 @@ public class APIviz {
     }
 
     private static void instrumentDiagram(RootDoc root, File outputDirectory, String filename, String diagram) throws IOException {
+        // TODO - it would be nice to have a debug flag that would spit out the graphviz source as well
+        //System.out.println(diagram);
+
         boolean needsBottomMargin = filename.contains("overview-summary") || filename.contains("package-summary");
 
         File htmlFile = new File(outputDirectory, filename + ".html");

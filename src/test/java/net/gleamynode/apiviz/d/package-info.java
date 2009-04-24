@@ -21,6 +21,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 /**
+ * This package demonstrates non-configured categories.  Non-configured categories
+ * should get their own colors automatically.  Notice that the default white
+ * fill/black text is used when the specified color combinations run out.
  * @apiviz.category checkNonconfigredCategoryPackage
  */
 package net.gleamynode.apiviz.d;

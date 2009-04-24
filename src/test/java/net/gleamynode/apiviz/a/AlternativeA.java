@@ -23,10 +23,21 @@
 package net.gleamynode.apiviz.a;
 
 /**
+ * Has a bunch of methods with different accessors.
  * @apiviz.category aCategory
  * @apiviz.landmark
  * @author bsneade
  */
 public class AlternativeA extends AbstractA {
+
+    public Integer publicField;
+
+    void friendlyMethod() { }
+
+    public void interfacePublicMethod() { }
+
+    protected void protectedMethod() { }
+
+    private void privateMethod() { }
 
 }

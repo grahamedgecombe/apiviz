@@ -43,8 +43,10 @@ import jdepend.framework.JavaPackage;
 
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.Doc;
+import com.sun.javadoc.FieldDoc;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.PackageDoc;
+import com.sun.javadoc.ProgramElementDoc;
 import com.sun.javadoc.RootDoc;
 import com.sun.javadoc.SeeTag;
 import com.sun.javadoc.Tag;
@@ -63,6 +65,22 @@ public class ClassDocGraph {
     private final Map<ClassDoc, Set<Edge>> edges = new HashMap<ClassDoc, Set<Edge>>();
     private final Map<ClassDoc, Set<Edge>> reversedEdges = new HashMap<ClassDoc, Set<Edge>>();
     private int nonconfiguredCategoryCount = 0;
+
+    /**
+     * Set to true if the {@link #OPTION_SHOW_METHODS} is specified
+     */
+    private boolean showMethods = false;
+
+    /**
+     * Set to true if the {@link #OPTION_SHOW_FIELDS} is specified
+     */
+    private boolean showFields = false;
+
+    /**
+     * Value of the javadoc option for access modifiers.  Defaults to {@link #JAVADOC_OPTION_PROTECTED} because
+     * that is what javadoc defaults to.
+     */
+    private String accessLevel = JAVADOC_OPTION_PROTECTED;
 
     /**
      * Key = category name<br>
@@ -88,6 +106,12 @@ public class ClassDocGraph {
                             ", Ignoring.  Use format '" + OPTION_CATEGORY +
                             " <category>[:<fillcolor>[:linecolor]]'");
                 }
+            } else if (OPTION_SHOW_METHODS.equals(option[0])) {
+                showMethods = true;
+            } else if (OPTION_SHOW_FIELDS.equals(option[0])) {
+                showFields = true;
+            } else if (JAVADOC_ACCESS_OPTIONS.contains(option[0])) {
+                accessLevel = option[0];
             }
         }
 
@@ -415,7 +439,7 @@ public class ClassDocGraph {
                 "splines=polyline;" + NEWLINE +
                 "edge [fontsize=10, fontname=\"" + NORMAL_FONT + "\", " +
                 "style=\"setlinewidth(0.6)\"]; " + NEWLINE +
-                "node [shape=box, fontsize=10, fontname=\"" + NORMAL_FONT + "\", " +
+                "node [shape=plaintext, fontsize=10, fontname=\"" + NORMAL_FONT + "\", " +
                 "width=0.1, height=0.1, style=\"setlinewidth(0.6)\"]; " + NEWLINE);
 
         Map<String, ClassDoc> nodesToRender = new TreeMap<String, ClassDoc>();
@@ -663,7 +687,7 @@ public class ClassDocGraph {
                 "splines=polyline;" + NEWLINE +
                 "edge [fontsize=10, fontname=\"" + NORMAL_FONT + "\", " +
                 "style=\"setlinewidth(0.6)\"]; " + NEWLINE +
-                "node [shape=box, fontsize=10, fontname=\"" + NORMAL_FONT + "\", " +
+                "node [shape=plaintext, fontsize=10, fontname=\"" + NORMAL_FONT + "\", " +
                 "width=0.1, height=0.1, style=\"setlinewidth(0.6)\"]; " + NEWLINE);
 
         renderSubgraph(pkg, cls, buf, nodesToRender, edgesToRender, portrait);
@@ -712,15 +736,14 @@ public class ClassDocGraph {
     private void renderClass(PackageDoc pkg, ClassDoc cls, StringBuilder buf, ClassDoc node) {
         checkCategoryExistance(node);
 
-        String fillColor = getFillColor(pkg, cls, node);
-        String lineColor = getLineColor(pkg, cls, node);
         String fontColor = getFontColor(pkg, node);
         String href = getPath(pkg, node);
 
         buf.append(getNodeId(node));
-        buf.append(" [label=\"");
-        buf.append(getNodeLabel(pkg, node));
-        buf.append("\", tooltip=\"");
+        buf.append(" [label=<");
+        buf.append(getHTMLNodeLabel(pkg, cls, node));
+        buf.append(">");
+        buf.append(", tooltip=\"");
         buf.append(escape(getNodeLabel(pkg, node)));
         buf.append("\"");
         if (node.isAbstract() && !node.isInterface()) {
@@ -728,16 +751,8 @@ public class ClassDocGraph {
             buf.append(ITALIC_FONT);
             buf.append("\"");
         }
-        buf.append(", style=\"filled");
-        if (node.tags("@deprecated").length > 0) {
-            buf.append(",dotted");
-        }
-        buf.append("\", color=\"");
-        buf.append(lineColor);
-        buf.append("\", fontcolor=\"");
+        buf.append(", fontcolor=\"");
         buf.append(fontColor);
-        buf.append("\", fillcolor=\"");
-        buf.append(fillColor);
 
         if (href != null) {
             buf.append("\", href=\"");
@@ -759,16 +774,20 @@ public class ClassDocGraph {
 
         if (reverse) {
             buf.append(getNodeId(edge.getTarget()));
+            buf.append(":class");
             buf.append(" -> ");
             buf.append(getNodeId(edge.getSource()));
+            buf.append(":class");
             buf.append(" [arrowhead=\"");
             buf.append(type.getArrowTail());
             buf.append("\", arrowtail=\"");
             buf.append(type.getArrowHead() == null? (edge.isOneway()? "open" : "none") : type.getArrowHead());
         } else {
             buf.append(getNodeId(edge.getSource()));
+            buf.append(":class");
             buf.append(" -> ");
             buf.append(getNodeId(edge.getTarget()));
+            buf.append(":class");
             buf.append(" [arrowhead=\"");
             buf.append(type.getArrowHead() == null? (edge.isOneway()? "open" : "none") : type.getArrowHead());
             buf.append("\", arrowtail=\"");
@@ -949,17 +968,23 @@ public class ClassDocGraph {
         StringBuilder buf = new StringBuilder(256);
         String stereotype = getStereotype(node);
         if (stereotype != null) {
+            //TODO - we should have an option to use "<<" and ">>" for systems
+            // where the encoding is messed up
             buf.append("&#171;");
             buf.append(stereotype);
             buf.append("&#187;\\n");
         }
 
         if (node.containingPackage() == pkg) {
+            //we are in the same package
             buf.append(node.name());
         } else {
+            //in a different package
             if (node.containingPackage() == null) {
+                //if the class does not have a package
                 buf.append(node.name());
             } else {
+                //it does, so append the package name
                 buf.append(node.name());
                 buf.append("\\n(");
                 buf.append(node.containingPackage().name());
@@ -967,6 +992,111 @@ public class ClassDocGraph {
             }
         }
         return buf.toString();
+    }
+
+    private String getHTMLNodeLabel(PackageDoc pkg, ClassDoc cls, ClassDoc node) {
+        //TODO - need to find a represenation for deprecated.  I don't think we can
+        // do striped
+
+        final String fillColor = getFillColor(pkg, cls, node);
+        final String lineColor = getLineColor(pkg, cls, node);
+
+        StringBuilder buf = new StringBuilder(256);
+        buf.append("<table " +
+                "BORDER=\"0\" " +
+                "CELLBORDER=\"1\" " +
+                "CELLPADDING=\"0\" " +
+                "CELLSPACING=\"0\" " +
+                "PORT=\"class\" " +
+                "BGCOLOR=\"");
+        buf.append(fillColor);
+        buf.append("\" COLOR=\"");
+        buf.append(lineColor);
+        buf.append("\">");
+        buf.append("<tr>");
+        buf.append("<td>");
+        String stereotype = getStereotype(node);
+        if (stereotype != null) {
+            //TODO - we should have an option to use "<<" and ">>" for systems
+            // where the encoding is messed up
+            buf.append("&#171;");
+            buf.append(stereotype);
+            buf.append("&#187;<br/>");
+        }
+
+        if (node.containingPackage() == pkg) {
+            //we are in the same package
+            buf.append(node.name());
+        } else {
+            //in a different package
+            if (node.containingPackage() == null) {
+                //if the class does not have a package
+                buf.append(node.name());
+            } else {
+                //it does, so append the package name
+                buf.append(node.name());
+                buf.append("<br/>(");
+                buf.append(node.containingPackage().name());
+                buf.append(')');
+            }
+        }
+        buf.append("</td></tr>");
+        if (showFields) {
+            buf.append("<tr>");
+            buf.append("<td " +
+                    "ALIGN=\"LEFT\" " +
+                    "VALIGN=\"MIDDLE\" " +
+                    ">");
+            for (final FieldDoc field : node.fields()) {
+                //TODO - we need to check for excludes
+                if (displayBasedOnAccessLevel(field)) {
+                    buf.append(field.name());
+                    buf.append(":");
+                    buf.append(field.type());
+                    buf.append("<br/>");
+                }
+            }
+            buf.append("</td>");
+            buf.append("</tr>");
+        }
+        if (showMethods) {
+            buf.append("<tr>");
+            buf.append("<td " +
+                    "ALIGN=\"LEFT\" " +
+                    "VALIGN=\"MIDDLE\" " +
+                    ">");
+            for (final MethodDoc method : node.methods()) {
+                if (displayBasedOnAccessLevel(method)) {
+                    //TODO - we need to check for excludes
+                    buf.append(method.name());
+                    buf.append(method.signature());
+                    buf.append(":");
+                    buf.append(method.returnType());
+                    buf.append("<br/>");
+                }
+            }
+            buf.append("</td>");
+            buf.append("</tr>");
+        }
+        buf.append("</table>");
+        return buf.toString();
+    }
+
+    private boolean displayBasedOnAccessLevel(final ProgramElementDoc doc) {
+        if (JAVADOC_OPTION_PRIVATE.equals(accessLevel)) {
+            //Show all classes and members
+            return true;
+        } else if (JAVADOC_OPTION_PACKAGE.equals(accessLevel)) {
+            //Show package/protected/public classes and members
+            return doc.isPackagePrivate() || doc.isProtected() || doc.isPublic();
+        } else if (JAVADOC_OPTION_PROTECTED.equals(accessLevel)){
+            //Show protected/public classes and members (default)
+            return doc.isProtected() || doc.isPublic();
+        } else if (JAVADOC_OPTION_PUBLIC.equals(accessLevel)) {
+            //Show only public classes and members
+            return doc.isPublic();
+        }
+        return false;
     }
 
     private static String escape(String text) {

@@ -20,14 +20,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package net.gleamynode.apiviz.a;
+package net.gleamynode.apiviz.b;
+
+import net.gleamynode.apiviz.a.A;
 
 /**
- * @apiviz.category aCategory
+ * Deprecated with javadoc tag
+ * @apiviz.category bCategory
+ * @apiviz.landmark
  * @author bsneade
+ * @deprecated 
  */
-public interface A {
+public class DeprecatedB extends AbstractB {
 
-    public void interfacePublicMethod();
+    public void doSomethingWithA(A a) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }

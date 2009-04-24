@@ -20,14 +20,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package net.gleamynode.apiviz.a;
+package org.jboss.apiviz;
+
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
- * @apiviz.category aCategory
+ *
  * @author bsneade
  */
-public interface A {
+public class GraphvizTest {
 
-    public void interfacePublicMethod();
+    public GraphvizTest() {
+    }
+
+    @Test
+    public void testExecutableRegularExpression() {
+        //on my macbook
+        assertTrue("dot - graphviz version 2.22.2 (20090313.1817)"
+                .matches(Graphviz.GRAPHVIZ_EXECUTABLE_FIRST_LINE_CHECK));
+
+        //on my linux desktop
+        assertTrue("dot - Graphviz version 2.16 (Fri Feb  8 12:52:03 UTC 2008)"
+                .matches(Graphviz.GRAPHVIZ_EXECUTABLE_FIRST_LINE_CHECK));
+    }
 
 }

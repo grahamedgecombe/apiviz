@@ -40,6 +40,7 @@ import com.sun.javadoc.RootDoc;
  *
  */
 public class Graphviz {
+    public static final String GRAPHVIZ_EXECUTABLE_FIRST_LINE_CHECK = "^.*[Gg][Rr][Aa][Pp][Hh][Vv][Ii][Zz].*$";
 
     private static boolean homeDetermined;
     private static File home;
@@ -60,6 +61,7 @@ public class Graphviz {
         try {
             p = pb.start();
         } catch (IOException e) {
+            root.printWarning(e.getMessage());
             return false;
         }
 
@@ -71,7 +73,7 @@ public class Graphviz {
 
             String line = null;
             while((line = in.readLine()) != null) {
-                if (line.matches("^.*[Gg][Rr][Aa][Pp][Hh][Vv][Ii][Zz].*$")) {
+                if (line.matches(GRAPHVIZ_EXECUTABLE_FIRST_LINE_CHECK)) {
                     root.printNotice("Graphviz Version: " + line);
                     return true;
                 } else {

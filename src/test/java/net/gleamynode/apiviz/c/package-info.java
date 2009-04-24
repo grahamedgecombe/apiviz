@@ -21,6 +21,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 /**
+ * Package for demonstrating specifiying a color by name instead of #111111
  * @apiviz.category testColor
  */
 package net.gleamynode.apiviz.c;

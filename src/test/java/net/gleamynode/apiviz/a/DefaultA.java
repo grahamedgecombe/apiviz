@@ -28,4 +28,8 @@ package net.gleamynode.apiviz.a;
  */
 public class DefaultA extends AbstractA {
 
+    public void interfacePublicMethod() { }
+
+    public void methodWithFields(final String field1, final Object field2) {} 
+
 }

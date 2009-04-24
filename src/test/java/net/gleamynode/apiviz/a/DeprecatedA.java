@@ -23,11 +23,14 @@
 package net.gleamynode.apiviz.a;
 
 /**
- * @apiviz.category aCategory
+ * Deprecated with annotation
  * @author bsneade
  */
-public interface A {
+@Deprecated
+public class DeprecatedA extends AbstractA {
 
-    public void interfacePublicMethod();
+    public void interfacePublicMethod() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }
