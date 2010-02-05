@@ -82,6 +82,7 @@ public class Graphviz {
             }
             return false;
         } catch (IOException e) {
+            root.printWarning("Problem detecting Graphviz: " + e.getMessage());
             return false;
         } finally {
             try {
