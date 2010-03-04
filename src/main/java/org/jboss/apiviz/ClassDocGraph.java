@@ -759,6 +759,7 @@ public class ClassDocGraph {
         }
 
         buf.append("\", style=\"" + type.getStyle());
+        buf.append("\", dir=\"both");
         buf.append("\", color=\"");
         buf.append(lineColor);
         buf.append("\", fontcolor=\"");
