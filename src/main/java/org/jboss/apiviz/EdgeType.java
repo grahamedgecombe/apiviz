@@ -30,10 +30,10 @@ package org.jboss.apiviz;
  *
  */
 public enum EdgeType {
-    GENERALIZATION("enormal", "solid", true),
-    REALIZATION("enormal", "setlinewidth(1.5), dotted", true),
+    GENERALIZATION("onormal", "solid", true),
+    REALIZATION("onormal", "setlinewidth(1.5), dotted", true),
     DEPENDENCY("open", "setlinewidth(1.5), dotted", true),
-    AGGREGATION("open", "solid", "ediamond", false),
+    AGGREGATION("open", "solid", "odiamond", false),
     COMPOSITION("open", "solid", "diamond", false),
     NAVIGABILITY(null, "solid", false),
     SEE_ALSO("none", "solid", false);
