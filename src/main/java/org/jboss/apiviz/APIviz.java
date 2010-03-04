@@ -112,12 +112,6 @@ public class APIviz {
             if (OPTION_NO_PACKAGE_DIAGRAM.equals(o[0])) {
                 continue;
             }
-            if (OPTION_SHOW_FIELDS.equals(o[0])) {
-                continue;
-            }
-            if (OPTION_SHOW_METHODS.equals(o[0])) {
-                continue;
-            }
 
             newOptions.add(o);
         }
@@ -140,14 +134,6 @@ public class APIviz {
             return 1;
         }
 
-        if (OPTION_SHOW_FIELDS.equals(option)) {
-            return 1;
-        }
-
-        if (OPTION_SHOW_METHODS.equals(option)) {
-            return 1;
-        }
-
         int answer = Standard.optionLength(option);
 
         if (option.equals(OPTION_HELP)) {
@@ -158,10 +144,6 @@ public class APIviz {
             System.out.println(OPTION_NO_PACKAGE_DIAGRAM  + "               Do not generate the package diagram in the overview summary");
             System.out.println(OPTION_CATEGORY + "                       <category>[:<fillcolor>[:<linecolor>]] ");
             System.out.println("                                    Color for items marked with " + TAG_CATEGORY);
-            System.out.println(OPTION_SHOW_FIELDS + "                     Renders the fields of classes at the level specified by ");
-            System.out.println("                                    javadoc options -(public|protected|package|private)");
-            System.out.println(OPTION_SHOW_METHODS + "                    Renders the methods of classes at the level specified by ");
-            System.out.println("                                    javadoc options -(public|protected|package|private)");
         }
 
         return answer;

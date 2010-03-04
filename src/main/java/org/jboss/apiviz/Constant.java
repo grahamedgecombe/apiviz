@@ -22,9 +22,6 @@
  */
 package org.jboss.apiviz;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * @author The APIviz Project (apiviz-dev@lists.jboss.org)
  * @author Trustin Lee (tlee@redhat.com)
@@ -35,8 +32,8 @@ import java.util.List;
 public class Constant {
 
     public static final String NEWLINE = System.getProperty("line.separator", "\n");
-    public static final String NORMAL_FONT = "Helvetica";
-    public static final String ITALIC_FONT = "Helvetica-Oblique";
+    public static final String NORMAL_FONT = "Arial";
+    public static final String ITALIC_FONT = "Arial Italic";
 
     public static final String TAG_PREFIX = "@apiviz.";
 
@@ -72,17 +69,7 @@ public class Constant {
     public static final String OPTION_NO_PACKAGE_DIAGRAM  = "-nopackagediagram";
     public static final String OPTION_SOURCE_CLASS_PATH   = "-sourceclasspath";
     public static final String OPTION_CATEGORY = "-category";
-    public static final String OPTION_SHOW_FIELDS = "-showfields";
-    public static final String OPTION_SHOW_METHODS = "-showmethods";
     public static final String OPTION_HELP ="-help";
-
-    public static final String JAVADOC_OPTION_PUBLIC ="-public";
-    public static final String JAVADOC_OPTION_PROTECTED ="-protected";
-    public static final String JAVADOC_OPTION_PACKAGE ="-package";
-    public static final String JAVADOC_OPTION_PRIVATE ="-private";
-    public static final List<String> JAVADOC_ACCESS_OPTIONS = Arrays.asList(
-            JAVADOC_OPTION_PUBLIC, JAVADOC_OPTION_PROTECTED, JAVADOC_OPTION_PACKAGE, JAVADOC_OPTION_PRIVATE);
-
 
     private Constant() {
         // Unused

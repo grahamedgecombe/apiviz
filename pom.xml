@@ -286,7 +286,6 @@
                     <version>true</version>
                     <keywords>true</keywords>
                     <breakiterator>true</breakiterator>
-                    <show>private</show>
                     <additionalparam>
             -link http://java.sun.com/javase/6/docs/api/
             -sourceclasspath ${project.build.outputDirectory}
@@ -294,8 +293,6 @@
             -category aCategory:$fdc298:$ff6347
             -category bCategory:$d082fe
             -category testColor:skyblue2:royalblue3
-            -showmethods
-            -showfields
                     </additionalparam>
                 </configuration>
                 <reportSets>
