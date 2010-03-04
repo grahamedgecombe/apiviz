@@ -22,31 +22,20 @@
  */
 package org.jboss.apiviz;
 
-import static org.jboss.apiviz.Constant.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.sun.javadoc.*;
+import com.sun.tools.doclets.standard.Standard;
 import jdepend.framework.JDepend;
 import jdepend.framework.JavaClass;
 import jdepend.framework.JavaPackage;
 import jdepend.framework.PackageFilter;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.DocErrorReporter;
-import com.sun.javadoc.LanguageVersion;
-import com.sun.javadoc.PackageDoc;
-import com.sun.javadoc.RootDoc;
-import com.sun.tools.doclets.standard.Standard;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static org.jboss.apiviz.Constant.*;
 
 /**
  * @author The APIviz Project (apiviz-dev@lists.jboss.org)
@@ -192,11 +181,7 @@ public class APIviz {
                     return false;
                 }
 
-                if (ClassDocGraph.isHidden(p)) {
-                    return false;
-                }
-
-                return true;
+                return !ClassDocGraph.isHidden(p);
             }
         };
 

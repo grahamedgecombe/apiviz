@@ -22,23 +22,8 @@
  */
 package org.jboss.apiviz;
 
-import com.sun.javadoc.AnnotationDesc;
-import com.sun.javadoc.AnnotationTypeDoc;
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.ConstructorDoc;
-import com.sun.javadoc.Doc;
-import com.sun.javadoc.FieldDoc;
-import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.PackageDoc;
-import com.sun.javadoc.ParamTag;
-import com.sun.javadoc.ParameterizedType;
-import com.sun.javadoc.RootDoc;
-import com.sun.javadoc.SeeTag;
-import com.sun.javadoc.SourcePosition;
-import com.sun.javadoc.Tag;
-import com.sun.javadoc.Type;
-import com.sun.javadoc.TypeVariable;
-import com.sun.javadoc.WildcardType;
+import com.sun.javadoc.*;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -135,7 +120,7 @@ public class Edge implements Comparable<Edge> {
                         }
                         if ("containingPackage".equals(methodName)) {
                             //do this wonkiness so the diagram will show the package as not found
-                            return (PackageDoc) Proxy.newProxyInstance(PackageDoc.class.getClassLoader(),
+                            return Proxy.newProxyInstance(PackageDoc.class.getClassLoader(),
                                     new Class[]{PackageDoc.class},
                                     new InvocationHandler() {
 
@@ -402,10 +387,12 @@ public class Edge implements Comparable<Edge> {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Deprecated
         public ClassDoc[] importedClasses() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+        @Deprecated
         public PackageDoc[] importedPackages() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
@@ -593,5 +580,5 @@ public class Edge implements Comparable<Edge> {
         public AnnotationTypeDoc asAnnotationTypeDoc() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
-    };
+    }
 }

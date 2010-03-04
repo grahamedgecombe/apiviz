@@ -81,7 +81,7 @@ public class Constant {
     public static final String JAVADOC_OPTION_PACKAGE ="-package";
     public static final String JAVADOC_OPTION_PRIVATE ="-private";
     public static final List<String> JAVADOC_ACCESS_OPTIONS = Arrays.asList(
-            new String[] { JAVADOC_OPTION_PUBLIC, JAVADOC_OPTION_PROTECTED, JAVADOC_OPTION_PACKAGE, JAVADOC_OPTION_PRIVATE} );
+            JAVADOC_OPTION_PUBLIC, JAVADOC_OPTION_PROTECTED, JAVADOC_OPTION_PACKAGE, JAVADOC_OPTION_PRIVATE);
 
 
     private Constant() {

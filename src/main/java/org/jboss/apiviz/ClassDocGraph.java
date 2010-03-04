@@ -22,34 +22,15 @@
  */
 package org.jboss.apiviz;
 
-import static org.jboss.apiviz.Constant.*;
-import static org.jboss.apiviz.EdgeType.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
-import java.util.regex.Pattern;
-
+import com.sun.javadoc.*;
 import jdepend.framework.JDepend;
 import jdepend.framework.JavaPackage;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.Doc;
-import com.sun.javadoc.FieldDoc;
-import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.PackageDoc;
-import com.sun.javadoc.ProgramElementDoc;
-import com.sun.javadoc.RootDoc;
-import com.sun.javadoc.SeeTag;
-import com.sun.javadoc.Tag;
+import java.util.*;
+import java.util.regex.Pattern;
+
+import static org.jboss.apiviz.Constant.*;
+import static org.jboss.apiviz.EdgeType.*;
 
 /**
  * @author The APIviz Project (apiviz-dev@lists.jboss.org)
@@ -67,17 +48,17 @@ public class ClassDocGraph {
     private int nonconfiguredCategoryCount = 0;
 
     /**
-     * Set to true if the {@link #OPTION_SHOW_METHODS} is specified
+     * Set to true if the {@link Constant#OPTION_SHOW_METHODS} is specified
      */
     private boolean showMethods = false;
 
     /**
-     * Set to true if the {@link #OPTION_SHOW_FIELDS} is specified
+     * Set to true if the {@link Constant#OPTION_SHOW_FIELDS} is specified
      */
     private boolean showFields = false;
 
     /**
-     * Value of the javadoc option for access modifiers.  Defaults to {@link #JAVADOC_OPTION_PROTECTED} because
+     * Value of the javadoc option for access modifiers.  Defaults to {@link Constant#JAVADOC_OPTION_PROTECTED} because
      * that is what javadoc defaults to.
      */
     private String accessLevel = JAVADOC_OPTION_PROTECTED;
@@ -890,8 +871,6 @@ public class ClassDocGraph {
 
     /**
      * Does the greying out effect
-     * @param number
-     * @return
      */
     private static String shiftColor(String number) {
         Integer colorValue = Integer.parseInt(number, 16);

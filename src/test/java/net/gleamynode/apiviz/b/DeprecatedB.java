@@ -31,6 +31,7 @@ import net.gleamynode.apiviz.a.A;
  * @author bsneade
  * @deprecated 
  */
+@Deprecated
 public class DeprecatedB extends AbstractB {
 
     public void doSomethingWithA(A a) {
