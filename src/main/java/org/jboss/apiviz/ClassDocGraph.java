@@ -974,7 +974,7 @@ public class ClassDocGraph {
     }
 
     private String getHTMLNodeLabel(PackageDoc pkg, ClassDoc cls, ClassDoc node) {
-        //TODO - need to find a represenation for deprecated.  I don't think we can
+        //TODO - need to find a representation for deprecated.  I don't think we can
         // do striped
 
         final String fillColor = getFillColor(pkg, cls, node);
@@ -984,7 +984,7 @@ public class ClassDocGraph {
         buf.append("<table " +
                 "BORDER=\"0\" " +
                 "CELLBORDER=\"1\" " +
-                "CELLPADDING=\"0\" " +
+                "CELLPADDING=\"4\" " +
                 "CELLSPACING=\"0\" " +
                 "PORT=\"class\" " +
                 "BGCOLOR=\"");
