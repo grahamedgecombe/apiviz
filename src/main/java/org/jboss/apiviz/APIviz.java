@@ -47,7 +47,8 @@ import static org.jboss.apiviz.Constant.*;
 public class APIviz {
 
     private static final Pattern INSERTION_POINT_PATTERN = Pattern.compile(
-            "((<\\/PRE>)(?=\\s*<P>)|(?=<TABLE BORDER=\"1\"))");
+            "((<\\/PRE>)(?=\\s*(<P>|<div[^>]*block))|(?=<TABLE BORDER=\"1\")|(<div[^>]*contentContainer[^>]*>))",
+            Pattern.CASE_INSENSITIVE);
 
     public static boolean start(RootDoc root) {
         root = new APIvizRootDoc(root);
@@ -320,16 +321,18 @@ public class APIviz {
             Matcher matcher = INSERTION_POINT_PATTERN.matcher(oldContent);
             if (!matcher.find()) {
                 throw new IllegalStateException(
-                        "Failed to find an insertion point.");
+                        "Failed to find an insertion point: " + htmlFile);
+            }
+            String style = "text-align: center;";
+            if (needsBottomMargin) {
+                style += "margin-bottom: 1em;";
             }
             String newContent =
-                oldContent.substring(0, matcher.end()) +
-                mapContent + NEWLINE +
-                "<CENTER><IMG SRC=\"" + pngFile.getName() +
-                "\" USEMAP=\"#APIVIZ\" BORDER=\"0\"></CENTER>" +
-                NEWLINE +
-                (needsBottomMargin? "<BR>" : "") +
-                NEWLINE +
+                oldContent.substring(0, matcher.end()) + NEWLINE +
+                mapContent +
+                "<div id=\"apivizContainer\" style=\"" + style + "\">" +
+                "<img src=\"" + pngFile.getName() +
+                        "\" usemap=\"#APIVIZ\" border=\"0\"></div>" +
                 oldContent.substring(matcher.end());
             FileUtil.writeFile(htmlFile, newContent);
         } finally {
