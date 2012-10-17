@@ -77,7 +77,7 @@
             <systemPath>${java.home}/../lib/tools.jar</systemPath>
             <optional>true</optional>
         </dependency>
-    <!-- JDepend for package dependency analysis -->
+        <!-- JDepend for package dependency analysis -->
         <dependency>
             <groupId>jdepend</groupId>
             <artifactId>jdepend</artifactId>
@@ -86,7 +86,7 @@
             <optional>true</optional>
         </dependency>
 
-    <!-- Testing -->
+        <!-- Testing -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
