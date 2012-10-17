@@ -26,7 +26,8 @@ import com.sun.tools.doclets.standard.Standard;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *
@@ -58,16 +59,6 @@ public class APIVizTest {
     @Test
     public void testOptionLength_OPTION_NO_PACKAGE_DIAGRAM() {
         assertEquals(1, APIviz.optionLength(Constant.OPTION_NO_PACKAGE_DIAGRAM));
-    }
-
-    @Test
-    public void testOptionLength_OPTION_SHOW_FIELDS() {
-        assertEquals(1, APIviz.optionLength(Constant.OPTION_SHOW_FIELDS));
-    }
-
-    @Test
-    public void testOptionLength_OPTION_SHOW_METHODS() {
-        assertEquals(1, APIviz.optionLength(Constant.OPTION_SHOW_METHODS));
     }
 
     @Test

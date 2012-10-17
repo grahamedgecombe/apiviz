@@ -47,7 +47,8 @@ import static org.jboss.apiviz.Constant.*;
 public class APIviz {
 
     private static final Pattern INSERTION_POINT_PATTERN = Pattern.compile(
-            "((<\\/PRE>)(?=\\s*<P>)|(?=<TABLE BORDER=\"1\"))");
+            "((<\\/PRE>)(?=\\s*(<P>|<div[^>]*block))|(?=<TABLE BORDER=\"1\")|(<div[^>]*contentContainer[^>]*>))",
+            Pattern.CASE_INSENSITIVE);
 
     public static boolean start(RootDoc root) {
         root = new APIvizRootDoc(root);
@@ -112,12 +113,6 @@ public class APIviz {
             if (OPTION_NO_PACKAGE_DIAGRAM.equals(o[0])) {
                 continue;
             }
-            if (OPTION_SHOW_FIELDS.equals(o[0])) {
-                continue;
-            }
-            if (OPTION_SHOW_METHODS.equals(o[0])) {
-                continue;
-            }
 
             newOptions.add(o);
         }
@@ -140,14 +135,6 @@ public class APIviz {
             return 1;
         }
 
-        if (OPTION_SHOW_FIELDS.equals(option)) {
-            return 1;
-        }
-
-        if (OPTION_SHOW_METHODS.equals(option)) {
-            return 1;
-        }
-
         int answer = Standard.optionLength(option);
 
         if (option.equals(OPTION_HELP)) {
@@ -158,10 +145,6 @@ public class APIviz {
             System.out.println(OPTION_NO_PACKAGE_DIAGRAM  + "               Do not generate the package diagram in the overview summary");
             System.out.println(OPTION_CATEGORY + "                       <category>[:<fillcolor>[:<linecolor>]] ");
             System.out.println("                                    Color for items marked with " + TAG_CATEGORY);
-            System.out.println(OPTION_SHOW_FIELDS + "                     Renders the fields of classes at the level specified by ");
-            System.out.println("                                    javadoc options -(public|protected|package|private)");
-            System.out.println(OPTION_SHOW_METHODS + "                    Renders the methods of classes at the level specified by ");
-            System.out.println("                                    javadoc options -(public|protected|package|private)");
         }
 
         return answer;
@@ -338,16 +321,18 @@ public class APIviz {
             Matcher matcher = INSERTION_POINT_PATTERN.matcher(oldContent);
             if (!matcher.find()) {
                 throw new IllegalStateException(
-                        "Failed to find an insertion point.");
+                        "Failed to find an insertion point: " + htmlFile);
+            }
+            String style = "text-align: center;";
+            if (needsBottomMargin) {
+                style += "margin-bottom: 1em;";
             }
             String newContent =
-                oldContent.substring(0, matcher.end()) +
-                mapContent + NEWLINE +
-                "<CENTER><IMG SRC=\"" + pngFile.getName() +
-                "\" USEMAP=\"#APIVIZ\" BORDER=\"0\"></CENTER>" +
-                NEWLINE +
-                (needsBottomMargin? "<BR>" : "") +
-                NEWLINE +
+                oldContent.substring(0, matcher.end()) + NEWLINE +
+                mapContent +
+                "<div id=\"apivizContainer\" style=\"" + style + "\">" +
+                "<img src=\"" + pngFile.getName() +
+                        "\" usemap=\"#APIVIZ\" border=\"0\"></div>" +
                 oldContent.substring(matcher.end());
             FileUtil.writeFile(htmlFile, newContent);
         } finally {
