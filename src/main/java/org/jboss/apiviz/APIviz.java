@@ -156,19 +156,19 @@ public class APIviz {
 
     private static void generateOverviewSummary(RootDoc root, ClassDocGraph graph, File outputDirectory) throws IOException {
         final Map<String, PackageDoc> packages = getPackages(root);
-        PackageFilter packageFilter = new PackageFilter() {
-            @Override
-            public boolean accept(String packageName) {
-                PackageDoc p = packages.get(packageName);
-                if (p == null) {
-                    return false;
-                }
 
-                return !ClassDocGraph.isHidden(p);
+        PackageFilter packageFilter = PackageFilter.all();
+
+        for (Map.Entry<String, PackageDoc> entry : packages.entrySet()) {
+            String packageName = entry.getKey();
+            PackageDoc p = entry.getValue();
+
+            if (!ClassDocGraph.isHidden(p)) {
+                packageFilter.including(packageName);
             }
-        };
+        }
 
-        JDepend jdepend = new JDepend(packageFilter);
+        JDepend jdepend = new JDepend(packageFilter.excludingRest());
 
         File[] classPath = getClassPath(root.options());
         for (File e: classPath) {
