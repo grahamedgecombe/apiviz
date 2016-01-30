@@ -41,8 +41,6 @@ import static org.jboss.apiviz.Constant.*;
  * @author The APIviz Project (apiviz-dev@lists.jboss.org)
  * @author Trustin Lee (tlee@redhat.com)
  *
- * @version $Rev$, $Date$
- *
  */
 public class APIviz {
 

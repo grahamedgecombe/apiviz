@@ -30,8 +30,6 @@ import com.sun.javadoc.RootDoc;
  * @author The APIviz Project (netty@googlegroups.com)
  * @author Trustin Lee (trustin@gmail.com)
  *
- * @version $Rev$, $Date$
- *
  */
 public class APIviz {
 

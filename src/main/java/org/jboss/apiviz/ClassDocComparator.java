@@ -22,15 +22,13 @@
  */
 package org.jboss.apiviz;
 
-import java.util.Comparator;
-
 import com.sun.javadoc.ClassDoc;
+
+import java.util.Comparator;
 
 /**
  * @author The APIviz Project (apiviz-dev@lists.jboss.org)
  * @author Trustin Lee (tlee@redhat.com)
- *
- * @version $Rev$, $Date$
  *
  */
 class ClassDocComparator implements Comparator<ClassDoc> {

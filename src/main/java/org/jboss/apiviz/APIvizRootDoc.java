@@ -22,20 +22,13 @@
  */
 package org.jboss.apiviz;
 
-import static org.jboss.apiviz.Constant.*;
+import com.sun.javadoc.*;
 
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.PackageDoc;
-import com.sun.javadoc.RootDoc;
-import com.sun.javadoc.SeeTag;
-import com.sun.javadoc.SourcePosition;
-import com.sun.javadoc.Tag;
+import static org.jboss.apiviz.Constant.*;
 
 /**
  * @author The APIviz Project (apiviz-dev@lists.jboss.org)
  * @author Trustin Lee (tlee@redhat.com)
- *
- * @version $Rev$, $Date$
  *
  */
 public class APIvizRootDoc implements RootDoc {

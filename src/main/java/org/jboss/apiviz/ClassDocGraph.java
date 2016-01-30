@@ -36,8 +36,6 @@ import static org.jboss.apiviz.EdgeType.*;
  * @author The APIviz Project (apiviz-dev@lists.jboss.org)
  * @author Trustin Lee (tlee@redhat.com)
  *
- * @version $Rev$, $Date$
- *
  */
 public class ClassDocGraph {
 

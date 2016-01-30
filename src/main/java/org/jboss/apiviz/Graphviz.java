@@ -22,21 +22,13 @@
  */
 package org.jboss.apiviz;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-
 import com.sun.javadoc.RootDoc;
+
+import java.io.*;
 
 /**
  * @author The APIviz Project (apiviz-dev@lists.jboss.org)
  * @author Trustin Lee (tlee@redhat.com)
- *
- * @version $Rev$, $Date$
  *
  */
 public class Graphviz {
