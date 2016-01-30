@@ -39,10 +39,6 @@
     <url>http://github.com/jboss/jboss-parent-pom/apiviz</url>
   </scm>
 
-  <properties>
-    <jdepend-version>2.9.5</jdepend-version>
-  </properties>
-
   <dependencies>
     <dependency>
       <groupId>com.sun</groupId>
@@ -55,7 +51,7 @@
     <dependency>
       <groupId>guru.nidi</groupId>
       <artifactId>jdepend</artifactId>
-      <version>${jdepend-version}</version>
+      <version>2.9.5</version>
       <scope>compile</scope>
     </dependency>
 
