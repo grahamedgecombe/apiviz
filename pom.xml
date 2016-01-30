@@ -9,7 +9,7 @@
     <version>9</version>
   </parent>
 
-  <groupId>org.jboss.apiviz</groupId>
+  <groupId>com.grahamedgecombe.apiviz</groupId>
   <artifactId>apiviz</artifactId>
   <version>1.3.3.GA-SNAPSHOT</version>
   <packaging>jar</packaging>
@@ -20,7 +20,7 @@
     It generates comprehensive UML-like class and package diagrams
     that help the quick understanding of the overall API structure.
   </description>
-  <url>http://www.jboss.org/apiviz/</url>
+  <url>https://github.com/grahamedgecombe/apiviz</url>
   <inceptionYear>2008</inceptionYear>
   <organization>
     <name>JBoss - a division of Red Hat</name>
@@ -38,9 +38,9 @@
   </prerequisites>
 
   <scm>
-    <connection>scm:svn:http://anonsvn.jboss.org/repos/apiviz/branches/1.3</connection>
-    <developerConnection>scm:svn:https://svn.jboss.org/repos/apiviz/branches/1.3</developerConnection>
-    <url>http://github.com/jboss/jboss-parent-pom/apiviz</url>
+    <connection>scm:git:https://git.grahamedgecombe.com/grahamedgecombe/apiviz</connection>
+    <developerConnection>scm:git:git@github.com:grahamedgecombe/apiviz.git</developerConnection>
+    <url>https://github.com/grahamedgecombe/apiviz</url>
   </scm>
 
   <dependencies>
