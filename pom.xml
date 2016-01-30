@@ -33,6 +33,14 @@
     </license>
   </licenses>
 
+  <developers>
+    <developer>
+      <name>Graham Edgecombe</name>
+      <email>gpe@grahamedgecombe.com</email>
+      <url>https://grahamedgecombe.com</url>
+    </developer>
+  </developers>
+
   <prerequisites>
     <maven>3.0.0</maven>
   </prerequisites>
