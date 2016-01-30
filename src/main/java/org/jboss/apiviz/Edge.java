@@ -580,5 +580,13 @@ public class Edge implements Comparable<Edge> {
         public AnnotationTypeDoc asAnnotationTypeDoc() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+
+        public AnnotatedType asAnnotatedType() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public Type getElementType() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
     }
 }
