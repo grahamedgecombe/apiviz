@@ -143,7 +143,7 @@
           <docletArtifact>
             <groupId>org.jboss.apiviz</groupId>
             <artifactId>apiviz</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
           </docletArtifact>
           <useStandardDocletOptions>true</useStandardDocletOptions>
           <docencoding>UTF-8</docencoding>
