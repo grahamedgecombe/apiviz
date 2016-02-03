@@ -8,7 +8,7 @@ Changes
 
 * Convert the repository from Subversion to Git.
 * Add support for building with Java 8.
-* Switch to [fork of JDepend][jdepend-fork] that supports class files compiled
+* Switch to a [fork of JDepend][jdepend-fork] that supports class files compiled
   with Java 8.
 * Build as a normal jar, instead of a fat jar.
 * Tidy up and simplify the POM.
