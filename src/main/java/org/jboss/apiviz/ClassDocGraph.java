@@ -311,7 +311,12 @@ public class ClassDocGraph {
     }
 
     static boolean isHidden(Doc node) {
-        if (node.tags(TAG_HIDDEN).length > 0) {
+        if (node == null) {
+            return false;
+        }
+
+        final Tag[] hiddenTags = node.tags(TAG_HIDDEN);
+        if (hiddenTags != null && hiddenTags.length > 0) {
             return true;
         }
 
@@ -331,7 +336,7 @@ public class ClassDocGraph {
 
     private static void addPackageDependency(
             Set<Edge> edgesToRender, PackageDoc source, PackageDoc target) {
-        if (source != target && source.isIncluded() && target.isIncluded()) {
+        if (source != null && target != null && source != target && source.isIncluded() && target.isIncluded()) {
             edgesToRender.add(
                     new Edge(EdgeType.DEPENDENCY, source, target));
         }
