@@ -23,7 +23,7 @@ following to the Javadoc configuration in your `pom.xml` file to use it:
     <docletArtifact>
       <groupId>com.grahamedgecombe.apiviz</groupId>
       <artifactId>apiviz</artifactId>
-      <version>1.3.3</version>
+      <version>1.3.4</version>
     </docletArtifact>
     <additionalparam>
       -sourceclasspath ${project.build.outputDirectory}
