@@ -29,6 +29,9 @@ following to the Javadoc configuration in your `pom.xml` file to use it:
       -sourceclasspath ${project.build.outputDirectory}
     </additionalOptions>
 
+Prior to version 3.0.0 of the Javadoc plugin, `additionalparam` should be used
+instead of `additionalOptions`.
+
 The artifacts are signed with my personal [GPG key][gpg].
 
 License
