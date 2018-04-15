@@ -25,9 +25,9 @@ following to the Javadoc configuration in your `pom.xml` file to use it:
       <artifactId>apiviz</artifactId>
       <version>1.3.4</version>
     </docletArtifact>
-    <additionalparam>
+    <additionalOptions>
       -sourceclasspath ${project.build.outputDirectory}
-    </additionalparam>
+    </additionalOptions>
 
 The artifacts are signed with my personal [GPG key][gpg].
 
